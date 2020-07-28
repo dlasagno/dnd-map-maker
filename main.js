@@ -4,7 +4,7 @@ const gridSize = 32
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const src = ['stone', 'dirt'].map(src => `./assets/textures/${src}.png`)
+const src = ['stone', 'dirt', 'water', 'wood', 'bricks', 'grass'].map(src => `./assets/textures/${src}.png`)
 const selector = document.getElementById('selector')
 let selectedMaterial
 const images = []
