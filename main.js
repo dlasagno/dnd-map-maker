@@ -22,11 +22,16 @@ for (const f of src) {
 
 canvas.width = mapWidth * gridSize
 canvas.height = mapHeight * gridSize
-canvas.addEventListener('mousemove', function (e) {
-
-    if (e.buttons == 1 && selectedMaterial != undefined)
-        ctx.drawImage(selectedMaterial, Math.floor(e.offsetX / 32) * 32, Math.floor(e.offsetY / 32) * 32)
+canvas.addEventListener('click', e => {
+    if (selectedMaterial)
+        drawCell(selectedMaterial, Math.floor(e.offsetX/gridSize), Math.floor(e.offsetY/gridSize))
 })
+canvas.addEventListener('mousemove', e => {
+    if (e.buttons == 1 && selectedMaterial)
+        drawCell(selectedMaterial, Math.floor(e.offsetX/gridSize), Math.floor(e.offsetY/gridSize))
+})
+
+drawGrid()
 
 function drawGrid() {
     ctx.lineWidth = 1
@@ -43,4 +48,7 @@ function drawGrid() {
         ctx.stroke()
     }
 }
-drawGrid()
+
+function drawCell(image, x, y) {
+    ctx.drawImage(image, x * gridSize, y * gridSize)
+}
