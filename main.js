@@ -35,18 +35,18 @@ drawGrid()
 
 function drawGrid() {
     ctx.lineWidth = 1
-    ctx.strokeStyle = 'rgba(128, 128, 128, 255)'
-    for (let x = 1; x < mapWidth; x++) {
-        ctx.moveTo(x * gridSize, 0)
-        ctx.lineTo(x * gridSize, mapHeight * gridSize)
-        ctx.stroke()
-    }
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
 
-    for (let y = 1; y < mapHeight; y++) {
-        ctx.moveTo(0, y * gridSize)
-        ctx.lineTo(mapWidth * gridSize, y * gridSize)
-        ctx.stroke()
+    ctx.beginPath()
+    for (let x = 1; x < mapWidth; x++) {
+        ctx.moveTo(x*gridSize + 0.5, 0)
+        ctx.lineTo(x*gridSize + 0.5, mapHeight * gridSize)
     }
+    for (let y = 1; y < mapHeight; y++) {
+        ctx.moveTo(0, y*gridSize + 0.5)
+        ctx.lineTo(mapWidth * gridSize, y*gridSize + 0.5)
+    }
+    ctx.stroke()
 }
 
 function drawCell(image, x, y) {
