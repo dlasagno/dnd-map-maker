@@ -1,3 +1,7 @@
+const mapWidth = 20
+const mapHeight = 20
+const gridSize = 32
+
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const src = ['stone', 'dirt'].map(src => `./assets/textures/${src}.png`)
@@ -16,6 +20,8 @@ for (const f of src) {
 }
 
 
+canvas.width = mapWidth * gridSize
+canvas.height = mapHeight * gridSize
 canvas.addEventListener('mousemove', function (e) {
 
     if (e.buttons == 1 && selectedMaterial != null)
@@ -23,7 +29,6 @@ canvas.addEventListener('mousemove', function (e) {
 })
 const w = canvas.offsetWidth
 const h = canvas.offsetHeight
-const gridSize = 32
 
 function drawGrid() {
     const linesX = w / gridSize
