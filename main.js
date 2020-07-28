@@ -24,26 +24,22 @@ canvas.width = mapWidth * gridSize
 canvas.height = mapHeight * gridSize
 canvas.addEventListener('mousemove', function (e) {
 
-    if (e.buttons == 1 && selectedMaterial != null)
+    if (e.buttons == 1 && selectedMaterial != undefined)
         ctx.drawImage(selectedMaterial, Math.floor(e.offsetX / 32) * 32, Math.floor(e.offsetY / 32) * 32)
 })
-const w = canvas.offsetWidth
-const h = canvas.offsetHeight
 
 function drawGrid() {
-    const linesX = w / gridSize
-    const linesY = h / gridSize
     ctx.lineWidth = 1
-    ctx.strokeStyle = '#aeaeae'
-    for (let x = 0; x < linesX; x++) {
+    ctx.strokeStyle = 'rgba(128, 128, 128, 255)'
+    for (let x = 1; x < mapWidth; x++) {
         ctx.moveTo(x * gridSize, 0)
-        ctx.lineTo(x * gridSize, h)
+        ctx.lineTo(x * gridSize, mapHeight * gridSize)
         ctx.stroke()
     }
 
-    for (let y = 0; y < linesY; y++) {
+    for (let y = 1; y < mapHeight; y++) {
         ctx.moveTo(0, y * gridSize)
-        ctx.lineTo(w, y * gridSize)
+        ctx.lineTo(mapWidth * gridSize, y * gridSize)
         ctx.stroke()
     }
 }
