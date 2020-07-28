@@ -6,8 +6,9 @@ class Cell {
 
 class MapManager {
 
-  constructor(ctx, cellSize, mapWidth, mapHeight) {
+  constructor(ctx, textures, cellSize, mapWidth, mapHeight) {
     this.ctx = ctx
+    this.textures = textures
     this.cellSize = cellSize
     this.mapWidth = mapWidth
     this.mapHeight = mapHeight
@@ -24,6 +25,36 @@ class MapManager {
 
   get _mapHeightTotal() {
     return this.mapHeight * this.cellSize
+  }
+
+
+  setCell(x, y, {textureName} = {}) {
+    console.log('hey')
+    if (!this.isCellDefined(x, y))
+      this._defineCell(x, y)
+
+    if (textureName)
+      this.cells[x][y].textureName = textureName
+
+    this._drawCell(x, y)
+    this._drawGrid()
+  }
+
+  isCellDefined(x, y) {
+    return this.cells[x] != undefined && this.cells[x][y] instanceof Cell
+  }
+
+
+  _defineCell(x, y) {
+    if (this.cells[x] == undefined)
+      this.cells[x] = []
+    if (this.cells[x][y] == undefined)
+      this.cells[x][y] = new Cell()
+  }
+
+  _drawCell(x, y) {
+    if(this.isCellDefined && this.cells[x][y].textureName)
+      this.ctx.drawImage(this.textures[this.cells[x][y].textureName].element, x * this.cellSize, y * this.cellSize)
   }
 
   _drawGrid() {
