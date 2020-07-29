@@ -4,37 +4,34 @@ const cellSize = 32
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const textures = ['stone', 'dirt'].reduce((src, name) => {
-    src[name] = {path: `./assets/textures/${name}.png`}
-    return src;
-}, {})
+
+
+const textures = new Map(['stone', 'dirt'].map(name => [name, new Texture(name)]))
+
 const selector = document.getElementById('selector')
-let selectedMaterial
 let selectedTexture
 const images = []
-for (const [name, {path}] of Object.entries(textures)) {
+for (const texture of textures.values()) {
     const s = document.createElement('img')
-    s.src = path
+    s.src = texture.path
     s.addEventListener('click', function () {
-        selectedMaterial = this
-        selectedTexture = name
+        selectedTexture = texture
     })
     selector.appendChild(s)
-    textures[name].element = s
     images.push(s)
 }
 
 
 canvas.width = mapWidth * cellSize
 canvas.height = mapHeight * cellSize
-const mapManager = new MapManager(ctx, textures, cellSize, mapWidth, mapHeight)
+const mapManager = new MapManager(ctx, cellSize, mapWidth, mapHeight)
 
 canvas.addEventListener('click', e => {
-    if (selectedMaterial)
-        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {textureName: selectedTexture})
+    if (selectedTexture)
+        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {texture: selectedTexture})
         
 })
 canvas.addEventListener('mousemove', e => {
-    if (e.buttons == 1 && selectedMaterial)
-        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {textureName: selectedTexture})
+    if (e.buttons == 1 && selectedTexture)
+        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {texture: selectedTexture})
 })

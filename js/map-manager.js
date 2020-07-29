@@ -1,14 +1,26 @@
+class Texture {
+  constructor(name, path = `./assets/textures/${name}.png`) {
+    this.name = name
+    this.path = path
+  }
+
+  get image() {
+    const img = document.createElement('img', {src: this.path})
+    img.src = this.path
+    return img
+  }
+}
+
 class Cell {
-  constructor(textureName) {
-    this.textureName = textureName
+  constructor(texture) {
+    this.texture = texture
   }
 }
 
 class MapManager {
 
-  constructor(ctx, textures, cellSize, mapWidth, mapHeight) {
+  constructor(ctx, cellSize, mapWidth, mapHeight) {
     this.ctx = ctx
-    this.textures = textures
     this.cellSize = cellSize
     this.mapWidth = mapWidth
     this.mapHeight = mapHeight
@@ -28,13 +40,12 @@ class MapManager {
   }
 
 
-  setCell(x, y, {textureName} = {}) {
-    console.log('hey')
+  setCell(x, y, {texture} = {}) {
     if (!this.isCellDefined(x, y))
       this._defineCell(x, y)
 
-    if (textureName)
-      this.cells[x][y].textureName = textureName
+    if (texture)
+      this.cells[x][y].texture = texture
 
     this._drawCell(x, y)
     this._drawGrid()
@@ -53,8 +64,8 @@ class MapManager {
   }
 
   _drawCell(x, y) {
-    if(this.isCellDefined && this.cells[x][y].textureName)
-      this.ctx.drawImage(this.textures[this.cells[x][y].textureName].element, x * this.cellSize, y * this.cellSize)
+    if(this.isCellDefined && this.cells[x][y].texture)
+      this.ctx.drawImage(this.cells[x][y].texture.image, x * this.cellSize, y * this.cellSize)
   }
 
   _drawGrid() {
