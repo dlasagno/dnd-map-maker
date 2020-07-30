@@ -1,0 +1,53 @@
+* {
+  --background: #26282a;
+  --foreground: #090809;
+  --primary: #e40712;
+  --text: #dedede;
+
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "selected-texture texture-bar"
+    "tool-bar map-view";
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+
+  background: var(--background);
+}
+
+#selected-texture {
+  grid-area: selected-texture;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#texture-bar {
+  grid-area: texture-bar;
+  display: flex;
+  
+  background: var(--foreground);
+}
+#quick-textures {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+}
+#quick-textures > img:not(:last-child) {
+  margin-right: 14px;
+}
+#quick-textures > img:hover {
+  outline: 1px solid var(--primary);
+}
+
+#tool-bar {
+  grid-area: tool-bar;
+
+  background: var(--foreground);
+}

@@ -70,7 +70,7 @@ class MapManager {
 
   _drawGrid() {
     this.ctx.lineWidth = 1
-    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'
 
     this.ctx.beginPath()
     for (let x = 1; x < this.mapWidth; x++) {

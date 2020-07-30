@@ -8,14 +8,16 @@ const ctx = canvas.getContext('2d')
 
 const textures = new Map(['stone', 'dirt', 'water', 'wood', 'bricks', 'grass'].map(name => [name, new Texture(name)]))
 
-const selector = document.getElementById('selector')
-let selectedTexture
+const selector = document.getElementById('quick-textures')
+let selectedTexture = textures.get('stone')
+document.getElementById('selected-texture').src = selectedTexture.path
 const images = []
 for (const texture of textures.values()) {
     const s = document.createElement('img')
     s.src = texture.path
     s.addEventListener('click', function () {
         selectedTexture = texture
+        document.getElementById('selected-texture').src = texture.path
     })
     selector.appendChild(s)
     images.push(s)
