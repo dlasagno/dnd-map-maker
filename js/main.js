@@ -30,10 +30,18 @@ const mapManager = new MapManager(ctx, cellSize, mapWidth, mapHeight)
 
 canvas.addEventListener('click', e => {
     if (selectedTexture)
-        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {texture: selectedTexture})
+        mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture})
         
 })
 canvas.addEventListener('mousemove', e => {
+    const [x, y] = toCellCoordinates(e.offsetX, e.offsetY)
+    document.getElementById('x-coordinate').innerText = x
+    document.getElementById('y-coordinate').innerText = y
+
     if (e.buttons == 1 && selectedTexture)
-        mapManager.setCell(Math.floor(e.offsetX/cellSize), Math.floor(e.offsetY/cellSize), {texture: selectedTexture})
+        mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture})
 })
+
+function toCellCoordinates(x, y) {
+    return [Math.floor(x/cellSize), Math.floor(y/cellSize)]
+}
