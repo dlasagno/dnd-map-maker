@@ -2,8 +2,8 @@ const mapWidth = 20
 const mapHeight = 20
 const cellSize = 32
 
-
 const textures = new Map(['stone', 'dirt', 'water', 'wood', 'bricks', 'grass'].map(name => [name, new Texture(name)]))
+
 
 const selector = document.getElementById('quick-textures')
 let selectedTexture = textures.get('stone')
@@ -36,6 +36,7 @@ mapManager.element.addEventListener('mousemove', e => {
     if (e.buttons == 1 && selectedTexture)
         mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture})
 })
+
 
 function toCellCoordinates(x, y) {
     return [Math.floor(x/cellSize), Math.floor(y/cellSize)]
