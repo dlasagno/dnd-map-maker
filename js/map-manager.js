@@ -58,6 +58,8 @@ class MapManager {
 
 
   setCell(x, y, {texture} = {}) {
+    if(!this.areCoordinatesInside(x, y)) return
+
     if (!this.isCellDefined(x, y))
       this._defineCell(x, y)
 
@@ -69,6 +71,10 @@ class MapManager {
 
   isCellDefined(x, y) {
     return this.cells[x] != undefined && this.cells[x][y] instanceof Cell
+  }
+
+  areCoordinatesInside(x, y) {
+    return 0 <= x && x < this.mapWidth && 0 <= y && y < this.mapHeight
   }
 
 
