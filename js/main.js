@@ -34,35 +34,64 @@ pencil.listenTo('mousemove', e => {
 })
 tools.push(pencil)
 const rectangle = new Tool('Rectangle', './assets/icons/square.svg')
-rectangle.listenTo('click', e => {
-    if (selectedTexture) {
-        if (!rectangle.firstCoordinate) {
-            rectangle.firstCoordinate = toCellCoordinates(e.offsetX, e.offsetY)
+// rectangle.listenTo('click', e => {
+//     if (selectedTexture) {
+//         if (!rectangle.firstCoordinate) {
+//             rectangle.firstCoordinate = toCellCoordinates(e.offsetX, e.offsetY)
+//         }
+//         else {
+//             let [x0, y0] = rectangle.firstCoordinate
+//             let [x1, y1] = toCellCoordinates(e.offsetX, e.offsetY)
+//             if (e.shiftKey) {
+//                 x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+//                 y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+//             }
+//             if (e.altKey) {
+//                 x0 = x0 + x0-x1
+//                 y0 = y0 + y0-y1
+//             }
+
+
+//             for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+//                 mapManager.setCell(x, y0, {texture: selectedTexture})
+//                 mapManager.setCell(x, y1, {texture: selectedTexture})
+//             }
+//             for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
+//                 mapManager.setCell(x0, y, {texture: selectedTexture})
+//                 mapManager.setCell(x1, y, {texture: selectedTexture})
+//             }
+
+//             delete rectangle.firstCoordinate
+//         }
+//     }
+// })
+rectangle.listenTo('mousedown', e => {
+    rectangle.firstCoordinate = toCellCoordinates(e.offsetX, e.offsetY)
+})
+rectangle.listenTo('mouseup', e => {
+    if (rectangle.firstCoordinate) {
+        let [x0, y0] = rectangle.firstCoordinate
+        let [x1, y1] = toCellCoordinates(e.offsetX, e.offsetY)
+        if (e.shiftKey) {
+            x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+            y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
         }
-        else {
-            let [x0, y0] = rectangle.firstCoordinate
-            let [x1, y1] = toCellCoordinates(e.offsetX, e.offsetY)
-            if (e.shiftKey) {
-                x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
-                y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
-            }
-            if (e.altKey) {
-                x0 = x0 + x0-x1
-                y0 = y0 + y0-y1
-            }
-
-
-            for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
-                mapManager.setCell(x, y0, {texture: selectedTexture})
-                mapManager.setCell(x, y1, {texture: selectedTexture})
-            }
-            for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
-                mapManager.setCell(x0, y, {texture: selectedTexture})
-                mapManager.setCell(x1, y, {texture: selectedTexture})
-            }
-
-            delete rectangle.firstCoordinate
+        if (e.altKey) {
+            x0 = x0 + x0-x1
+            y0 = y0 + y0-y1
         }
+
+
+        for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+            mapManager.setCell(x, y0, {texture: selectedTexture})
+            mapManager.setCell(x, y1, {texture: selectedTexture})
+        }
+        for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
+            mapManager.setCell(x0, y, {texture: selectedTexture})
+            mapManager.setCell(x1, y, {texture: selectedTexture})
+        }
+
+        delete rectangle.firstCoordinate
     }
 })
 tools.push(rectangle)
@@ -72,6 +101,7 @@ const toolSelector = document.getElementById('tool-selector')
 for (const tool of tools) {
     const icon = document.createElement('img')
     icon.src = tool.icon
+    icon.classList.add('tool-icon')
     icon.addEventListener('click', function () {
         selectedTool = tool
     })
@@ -82,6 +112,12 @@ for (const tool of tools) {
 const mapManager = new MapManager(cellSize, mapWidth, mapHeight)
 document.getElementById('map-view').appendChild(mapManager.element)
 mapManager.element.addEventListener('click', e => {
+    selectedTool.on(e)
+})
+mapManager.element.addEventListener('mousedown', e => {
+    selectedTool.on(e)
+})
+mapManager.element.addEventListener('mouseup', e => {
     selectedTool.on(e)
 })
 mapManager.element.addEventListener('mousemove', e => {
