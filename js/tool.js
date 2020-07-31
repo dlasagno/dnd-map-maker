@@ -13,7 +13,8 @@ class Tool {
   }
 
   on(event) {
-    this.eventHandlers.get(event.type)(event)
+    if (this.eventHandlers.has(event.type))
+      this.eventHandlers.get(event.type)(event)
   }
 
 }
