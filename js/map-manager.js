@@ -19,15 +19,32 @@ class Cell {
 
 class MapManager {
 
-  constructor(ctx, cellSize, mapWidth, mapHeight) {
-    this.ctx = ctx
+  constructor(cellSize, mapWidth, mapHeight) {
     this.cellSize = cellSize
     this.mapWidth = mapWidth
     this.mapHeight = mapHeight
 
     this.cells = []
-
+    
+    this._containerElement = document.createElement('div')
+    this._containerElement.classList.add('canvas-container')
+    this._containerElement.style.width = `${this._mapWidthTotal}px`
+    this._containerElement.style.height = `${this._mapHeightTotal}px`
+    
+    this._mapLayer = document.createElement('canvas')
+    this._mapLayer.width = this._mapWidthTotal
+    this._mapLayer.height = this._mapHeightTotal
+    this._containerElement.appendChild(this._mapLayer)
+    
+    this._gridLayer = document.createElement('canvas')
+    this._gridLayer.width = this._mapWidthTotal
+    this._gridLayer.height = this._mapHeightTotal
+    this._containerElement.appendChild(this._gridLayer)
     this._drawGrid()
+  }
+
+  get element() {
+    return this._containerElement
   }
 
 
@@ -48,7 +65,6 @@ class MapManager {
       this.cells[x][y].texture = texture
 
     this._drawCell(x, y)
-    this._drawGrid()
   }
 
   isCellDefined(x, y) {
@@ -65,23 +81,25 @@ class MapManager {
 
   _drawCell(x, y) {
     if(this.isCellDefined && this.cells[x][y].texture)
-      this.ctx.drawImage(this.cells[x][y].texture.image, x * this.cellSize, y * this.cellSize)
+      this._mapLayer.getContext('2d').drawImage(this.cells[x][y].texture.image, x * this.cellSize, y * this.cellSize)
   }
 
-  _drawGrid() {
-    this.ctx.lineWidth = 1
-    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'
+  _drawGrid(color = 'rgba(255, 255, 255, 0.35)') {
+    const ctx = this._gridLayer.getContext('2d')
+    ctx.lineWidth = 1
+    ctx.strokeStyle = color
 
-    this.ctx.beginPath()
+    ctx.clearRect(0, 0, this._mapWidthTotal, this._mapHeightTotal)
+    ctx.beginPath()
     for (let x = 1; x < this.mapWidth; x++) {
-        this.ctx.moveTo(x*this.cellSize + 0.5, 0)
-        this.ctx.lineTo(x*this.cellSize + 0.5, this._mapHeightTotal)
+        ctx.moveTo(x*this.cellSize + 0.5, 0)
+        ctx.lineTo(x*this.cellSize + 0.5, this._mapHeightTotal)
     }
     for (let y = 1; y < mapHeight; y++) {
-        this.ctx.moveTo(0, y*this.cellSize + 0.5)
-        this.ctx.lineTo(this._mapWidthTotal, y*this.cellSize + 0.5)
+        ctx.moveTo(0, y*this.cellSize + 0.5)
+        ctx.lineTo(this._mapWidthTotal, y*this.cellSize + 0.5)
     }
-    this.ctx.stroke()
+    ctx.stroke()
   }
 
 }

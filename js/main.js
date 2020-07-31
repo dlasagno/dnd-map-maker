@@ -2,9 +2,6 @@ const mapWidth = 20
 const mapHeight = 20
 const cellSize = 32
 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
-
 
 const textures = new Map(['stone', 'dirt', 'water', 'wood', 'bricks', 'grass'].map(name => [name, new Texture(name)]))
 
@@ -24,16 +21,14 @@ for (const texture of textures.values()) {
 }
 
 
-canvas.width = mapWidth * cellSize
-canvas.height = mapHeight * cellSize
-const mapManager = new MapManager(ctx, cellSize, mapWidth, mapHeight)
-
-canvas.addEventListener('click', e => {
+const mapManager = new MapManager(cellSize, mapWidth, mapHeight)
+document.getElementById('map-view').appendChild(mapManager.element)
+mapManager.element.addEventListener('click', e => {
     if (selectedTexture)
         mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture})
         
 })
-canvas.addEventListener('mousemove', e => {
+mapManager.element.addEventListener('mousemove', e => {
     const [x, y] = toCellCoordinates(e.offsetX, e.offsetY)
     document.getElementById('x-coordinate').innerText = x
     document.getElementById('y-coordinate').innerText = y
