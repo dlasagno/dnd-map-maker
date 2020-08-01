@@ -8,8 +8,9 @@ class Tool {
   }
 
 
-  listenTo(event, eventHandler) {
-    this.eventHandlers.set(event, eventHandler)
+  listenTo(events, eventHandler) {
+    for (const event of events.split(/\s+/))
+      this.eventHandlers.set(event, eventHandler)
   }
 
   on(event) {

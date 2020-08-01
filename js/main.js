@@ -29,8 +29,13 @@ pencil.listenTo('click', e => {
     mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture}) 
 })
 pencil.listenTo('mousemove', e => {
-    if (e.buttons == 1 && selectedTexture)
-    mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture})
+    const [x, y] = toCellCoordinates(e.offsetX, e.offsetY)
+    if (selectedTexture) {
+        mapManager.clearPreview()
+        mapManager.previewCell(x, y, {texture: selectedTexture})
+        if (e.buttons == 1)
+            mapManager.setCell(x, y, {texture: selectedTexture})
+    }
 })
 tools.push(pencil)
 const rectangle = new Tool('Rectangle', './assets/icons/square.svg')
@@ -63,6 +68,61 @@ rectangle.listenTo('mouseup', e => {
         delete rectangle.firstCoordinate
     }
 })
+rectangle.listenTo('mouseout', e => {
+    delete rectangle.firstCoordinate
+    mapManager.clearPreview()
+})
+rectangle.listenTo('mousemove', e => {
+    mapManager.clearPreview()
+    if (rectangle.firstCoordinate) {
+        rectangle.lastCoordinate = toCellCoordinates(e.offsetX, e.offsetY)
+        let [x0, y0] = rectangle.firstCoordinate
+        let [x1, y1] = rectangle.lastCoordinate
+        if (e.shiftKey) {
+            x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+            y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+        }
+        if (e.altKey) {
+            x0 = x0 + x0-x1
+            y0 = y0 + y0-y1
+        }
+
+
+        for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+            mapManager.previewCell(x, y0, {texture: selectedTexture})
+            mapManager.previewCell(x, y1, {texture: selectedTexture})
+        }
+        for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
+            mapManager.previewCell(x0, y, {texture: selectedTexture})
+            mapManager.previewCell(x1, y, {texture: selectedTexture})
+        }
+    }
+})
+rectangle.listenTo('keydown keyup', e => {
+    mapManager.clearPreview()
+    if (rectangle.firstCoordinate) {
+        let [x0, y0] = rectangle.firstCoordinate
+        let [x1, y1] = rectangle.lastCoordinate
+        if (e.shiftKey) {
+            x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+            y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0))
+        }
+        if (e.altKey) {
+            x0 = x0 + x0-x1
+            y0 = y0 + y0-y1
+        }
+
+
+        for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+            mapManager.previewCell(x, y0, {texture: selectedTexture})
+            mapManager.previewCell(x, y1, {texture: selectedTexture})
+        }
+        for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
+            mapManager.previewCell(x0, y, {texture: selectedTexture})
+            mapManager.previewCell(x1, y, {texture: selectedTexture})
+        }
+    }
+})
 tools.push(rectangle)
 let selectedTool = pencil
 
@@ -88,6 +148,17 @@ mapManager.element.addEventListener('mousedown', e => {
 })
 mapManager.element.addEventListener('mouseup', e => {
     selectedTool.on(e)
+})
+mapManager.element.addEventListener('mouseout', e => {
+    selectedTool.on(e)
+})
+document.addEventListener('keydown', e => {
+    selectedTool.on(e)
+    
+})
+document.addEventListener('keyup', e => {
+    selectedTool.on(e)
+    
 })
 mapManager.element.addEventListener('mousemove', e => {
     const [x, y] = toCellCoordinates(e.offsetX, e.offsetY)
