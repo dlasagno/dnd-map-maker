@@ -124,18 +124,20 @@ rectangle.listenTo('keydown keyup', e => {
     }
 })
 tools.push(rectangle)
-let selectedTool = pencil
+let selectedTool
 
 const toolSelector = document.getElementById('tool-selector')
 for (const tool of tools) {
     const icon = document.createElement('img')
     icon.src = tool.icon
+    icon.id = `tool-${tool.name}`
     icon.classList.add('tool-icon')
     icon.addEventListener('click', function () {
-        selectedTool = tool
+        selectTool(tool)
     })
     toolSelector.appendChild(icon)
 }
+selectTool(pencil)
 
 
 const mapManager = new MapManager(cellSize, mapWidth, mapHeight)
@@ -168,6 +170,13 @@ mapManager.element.addEventListener('mousemove', e => {
     selectedTool.on(e)
 })
 
+
+function selectTool(tool) {
+    if (selectedTool)
+            document.getElementById(`tool-${selectedTool.name}`).classList.remove('active')
+    selectedTool = tool
+    document.getElementById(`tool-${tool.name}`).classList.add('active')
+}
 
 function toCellCoordinates(x, y) {
     return [Math.floor(x/cellSize), Math.floor(y/cellSize)]

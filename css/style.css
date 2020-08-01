@@ -65,13 +65,13 @@ body {
   flex-direction: column;
 }
 #tool-selector .tool-icon {
-  
+  padding: 10px
 }
 #tool-selector .tool-icon:not(:last-of-type) {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 #tool-selector .tool-icon:hover {
-  
+  background: rgba(255, 255, 255, 0.2);
 }
 #tool-selector .tool-icon.active {
   background: var(--primary);
