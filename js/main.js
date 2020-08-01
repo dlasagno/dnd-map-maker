@@ -2,7 +2,7 @@ const mapWidth = 20
 const mapHeight = 20
 const cellSize = 32
 
-const textures = new Map(['stone', 'dirt', 'water', 'wood', 'bricks', 'grass'].map(name => [name, new Texture(name)]))
+const textures = new Map(['stone', 'dirt', 'water', 'wood', 'bricks', 'grass', 'coal', 'andesite', 'cobblestone', 'stone_pavement'].map(name => [name, new Texture(name)]))
 
 
 const selector = document.getElementById('quick-textures')
