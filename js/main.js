@@ -26,7 +26,7 @@ const tools = []
 const pencil = new Tool('Pencil', './assets/icons/pencil.svg')
 pencil.listenTo('click', e => {
     if (selectedTexture)
-    mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture}) 
+        mapManager.setCell(...toCellCoordinates(e.offsetX, e.offsetY), {texture: selectedTexture}) 
 })
 pencil.listenTo('mousemove', e => {
     const [x, y] = toCellCoordinates(e.offsetX, e.offsetY)
@@ -36,6 +36,9 @@ pencil.listenTo('mousemove', e => {
         if (e.buttons == 1)
             mapManager.setCell(x, y, {texture: selectedTexture})
     }
+})
+pencil.listenTo('mouseout', e => {
+    mapManager.clearPreview()
 })
 tools.push(pencil)
 const rectangle = new Tool('Rectangle', './assets/icons/square.svg')
