@@ -24,7 +24,7 @@ class MapManager {
     this.mapWidth = mapWidth
     this.mapHeight = mapHeight
 
-    this.cells = []
+    this._cells = []
     
     this._containerElement = document.createElement('div')
     this._containerElement.classList.add('canvas-container')
@@ -35,6 +35,11 @@ class MapManager {
     this._mapLayer.width = this._mapWidthTotal
     this._mapLayer.height = this._mapHeightTotal
     this._containerElement.appendChild(this._mapLayer)
+    
+    this._previewLayer = document.createElement('canvas')
+    this._previewLayer.width = this._mapWidthTotal
+    this._previewLayer.height = this._mapHeightTotal
+    this._containerElement.appendChild(this._previewLayer)
     
     this._gridLayer = document.createElement('canvas')
     this._gridLayer.width = this._mapWidthTotal
@@ -58,19 +63,28 @@ class MapManager {
 
 
   setCell(x, y, {texture} = {}) {
-    if(!this.areCoordinatesInside(x, y)) return
+    if (!this.areCoordinatesInside(x, y)) return
 
     if (!this.isCellDefined(x, y))
       this._defineCell(x, y)
 
     if (texture)
-      this.cells[x][y].texture = texture
+      this._cells[x][y].texture = texture
 
     this._drawCell(x, y)
   }
 
+  previewCell(x, y, {texture} = {}) {
+    if (this.areCoordinatesInside(x, y) && texture)
+      this._previewLayer.getContext('2d').drawImage(texture.image, x * this.cellSize, y * this.cellSize)
+  }
+
   isCellDefined(x, y) {
-    return this.cells[x] != undefined && this.cells[x][y] instanceof Cell
+    return this._cells[x] != undefined && this._cells[x][y] instanceof Cell
+  }
+
+  clearPreview() {
+    this._previewLayer.getContext('2d').clearRect(0, 0, this._mapWidthTotal, this._mapHeightTotal)
   }
 
   areCoordinatesInside(x, y) {
@@ -79,15 +93,15 @@ class MapManager {
 
 
   _defineCell(x, y) {
-    if (this.cells[x] == undefined)
-      this.cells[x] = []
-    if (this.cells[x][y] == undefined)
-      this.cells[x][y] = new Cell()
+    if (this._cells[x] == undefined)
+      this._cells[x] = []
+    if (this._cells[x][y] == undefined)
+      this._cells[x][y] = new Cell()
   }
 
   _drawCell(x, y) {
-    if(this.isCellDefined && this.cells[x][y].texture)
-      this._mapLayer.getContext('2d').drawImage(this.cells[x][y].texture.image, x * this.cellSize, y * this.cellSize)
+    if(this.isCellDefined && this._cells[x][y].texture)
+      this._mapLayer.getContext('2d').drawImage(this._cells[x][y].texture.image, x * this.cellSize, y * this.cellSize)
   }
 
   _drawGrid(color = 'rgba(255, 255, 255, 0.35)') {
