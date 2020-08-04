@@ -1,5 +1,16 @@
 .App {
-  text-align: center;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "selected-texture texture-bar"
+    "tool-bar map-view";
+  width: 100vw;
+  height: 100vh;
+
+  background: var(--background);
+
+  color: var(--text);
 }
 
 .App-logo {
@@ -36,3 +47,55 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+
+
+.App-selected-texture {
+  grid-area: selected-texture;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#tool-bar {
+  grid-area: tool-bar;
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0;
+
+  background: var(--foreground);
+}
+#tool-selector {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+#tool-selector .tool-icon {
+  padding: 10px
+}
+#tool-selector .tool-icon:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+#tool-selector .tool-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+#tool-selector .tool-icon.active {
+  background: var(--primary);
+}
+#x-coordinate,
+#y-coordinate {
+  margin-top: 0.5em;
+
+  text-align: center;
+}
+
+.canvas-container {
+  position: relative;
+}
+.canvas-container canvas {
+  position: absolute;
+}
+

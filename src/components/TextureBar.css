@@ -1,0 +1,6 @@
+.TextureBar {
+  grid-area: texture-bar;
+  display: flex;
+  
+  background: var(--foreground);
+}

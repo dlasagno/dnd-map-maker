@@ -1,24 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+import textures from './textures';
+import TextureBar from './components/TextureBar';
+
 function App() {
+  const [selectedTexture, setSelectedTexture] = useState(textures[0]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <img className="App-selected-texture" src={selectedTexture.path} alt=""></img>
+      <TextureBar onTexturePick={(texture) => setSelectedTexture(texture)} />
+      <div id="tool-bar">
+          <div id="tool-selector"></div>
+          <div id="x-coordinate">14</div>
+          <div id="y-coordinate">17</div>
+      </div>
+      <div id="map-view"></div>
     </div>
   );
 }

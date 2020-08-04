@@ -1,0 +1,11 @@
+.TexturePicker {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+}
+.TexturePicker > img:not(:last-child) {
+  margin-right: 14px;
+}
+.TexturePicker > img:hover {
+  outline: 1px solid var(--primary);
+}
