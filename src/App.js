@@ -3,6 +3,7 @@ import './App.css';
 
 import textures from './textures';
 import TextureBar from './components/TextureBar';
+import MapView from './components/MapView';
 
 function App() {
   const [selectedTexture, setSelectedTexture] = useState(textures[0]);
@@ -16,7 +17,7 @@ function App() {
           <div id="x-coordinate">14</div>
           <div id="y-coordinate">17</div>
       </div>
-      <div id="map-view"></div>
+      <MapView width={20} height={20} cellSize={32} />
     </div>
   );
 }
