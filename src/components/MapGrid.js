@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './MapLayer.css';
 
-function MapGrid(props) {
+function GridLayer(props) {
   const gridCanvasRef = useRef(null);
 
   useEffect(() => {
@@ -27,4 +27,4 @@ function MapGrid(props) {
   );
 }
 
-export default MapGrid;
+export default GridLayer;
