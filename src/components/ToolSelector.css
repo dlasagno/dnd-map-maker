@@ -1,0 +1,17 @@
+.ToolSelector {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.ToolSelector .tool-icon {
+  padding: 10px
+}
+.ToolSelector .tool-icon:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+.ToolSelector .tool-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.ToolSelector .tool-icon.active {
+  background: var(--primary);
+}

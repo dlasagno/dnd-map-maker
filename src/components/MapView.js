@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTexture } from '../App';
+import { useTexture, useTool } from '../App';
 import './MapView.css'
 
 import GridLayer from './GridLayer';
@@ -10,20 +10,21 @@ function MapView(props) {
   const [previewCells, setPreviewCells] = useState([]);
 
   const selectedTexture = useTexture();
+  const selectedTool = useTool();
 
   function handleClick(e) {
     const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / props.cellSize);
     const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / props.cellSize);
 
-    drawMap(x, y, { texture: selectedTexture });
+    drawMap(x, y);
   }
 
-  function drawMap(x, y, { texture }) {
-    draw(setMapCells, x, y, { texture });
+  function drawMap(x, y) {
+    draw(setMapCells, x, y, { texture: selectedTexture });
   }
 
-  function drawPreview(x, y, { texture }) {
-    draw(setPreviewCells, x, y, { texture });
+  function drawPreview(x, y) {
+    draw(setPreviewCells, x, y, { texture: selectedTexture });
   }
 
   function clearPreview() {
@@ -37,19 +38,7 @@ function MapView(props) {
         width: props.width * props.cellSize,
         height: props.height * props.cellSize
       }}
-      onClick={handleClick}
-      onMouseOut={clearPreview}
-      onMouseMove={e => {
-        const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / props.cellSize);
-        const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / props.cellSize);
-
-        if (e.buttons === 1)
-          drawMap(x, y, { texture: selectedTexture });
-        else {
-          clearPreview();
-          drawPreview(x, y, { texture: selectedTexture });
-        }
-      }}
+      {...selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize })}
     >
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={mapCells} />
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={previewCells} />

@@ -1,33 +1,38 @@
 import React, { useState, useContext } from 'react';
 import './App.css';
-
-import textures from './textures';
 import TextureBar from './components/TextureBar';
+import ToolBar from './components/ToolBar';
 import MapView from './components/MapView';
 
-const TextureContext = React.createContext('selectedTexture');
+import textures from './textures';
+import tools from './tools';
 
+const TextureContext = React.createContext('selectedTexture');
 export function useTexture() {
   return useContext(TextureContext);
 }
 
+const ToolContext = React.createContext('selectedTool');
+export function useTool() {
+  return useContext(ToolContext);
+}
+
 function App() {
   const [selectedTexture, setSelectedTexture] = useState(textures[0]);
+  const [selectedTool, setSelectedTool] = useState(tools[0]);
 
   return (
     <TextureContext.Provider value={selectedTexture}>
+    <ToolContext.Provider value={selectedTool}>
 
     <div className="App">
       <img className="App-selected-texture" src={selectedTexture.path} alt=""></img>
       <TextureBar onTexturePick={setSelectedTexture} />
-      <div id="tool-bar">
-          <div id="tool-selector"></div>
-          <div id="x-coordinate">14</div>
-          <div id="y-coordinate">17</div>
-      </div>
+      <ToolBar onToolSelection={setSelectedTool} />
       <MapView width={100} height={100} cellSize={32} />
     </div>
 
+    </ToolContext.Provider>
     </TextureContext.Provider>
   );
 }

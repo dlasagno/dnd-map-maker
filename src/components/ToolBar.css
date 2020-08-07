@@ -1,0 +1,15 @@
+.ToolBar {
+  grid-area: tool-bar;
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0;
+
+  background: var(--foreground);
+}
+
+#x-coordinate,
+#y-coordinate {
+  margin-top: 0.5em;
+
+  text-align: center;
+}
