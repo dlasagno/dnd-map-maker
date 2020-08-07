@@ -27,4 +27,4 @@ function GridLayer(props) {
   );
 }
 
-export default GridLayer;
+export default React.memo(GridLayer);

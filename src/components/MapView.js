@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTexture } from '../App';
 import './MapView.css'
 
-import GridLayer from './MapGrid';
+import GridLayer from './GridLayer';
 import MapLayer from './MapLayer';
 
 function MapView(props) {
@@ -33,6 +33,10 @@ function MapView(props) {
   return (
     <div
       className="MapView"
+      style={{
+        width: props.width * props.cellSize,
+        height: props.height * props.cellSize
+      }}
       onClick={handleClick}
       onMouseOut={clearPreview}
       onMouseMove={e => {
@@ -45,8 +49,8 @@ function MapView(props) {
           clearPreview();
           drawPreview(x, y, { texture: selectedTexture });
         }
-      }
-    }>
+      }}
+    >
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={mapCells} />
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={previewCells} />
       <GridLayer width={props.width} height={props.height} cellSize={props.cellSize} />
