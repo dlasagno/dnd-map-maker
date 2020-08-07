@@ -9,8 +9,8 @@ function MapView(props) {
   const [mapCells, setMapCells] = useState([]);
   const [previewCells, setPreviewCells] = useState([]);
 
-  const selectedTexture = useTexture();
-  const selectedTool = useTool();
+  const [selectedTexture] = useTexture();
+  const [selectedTool] = useTool();
 
   function handleClick(e) {
     const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / props.cellSize);

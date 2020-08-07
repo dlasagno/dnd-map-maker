@@ -22,13 +22,13 @@ function App() {
   const [selectedTool, setSelectedTool] = useState(tools[0]);
 
   return (
-    <TextureContext.Provider value={selectedTexture}>
-    <ToolContext.Provider value={selectedTool}>
+    <TextureContext.Provider value={[selectedTexture, setSelectedTexture]}>
+    <ToolContext.Provider value={[selectedTool, setSelectedTool]}>
 
     <div className="App">
       <img className="App-selected-texture" src={selectedTexture.path} alt=""></img>
-      <TextureBar onTexturePick={setSelectedTexture} />
-      <ToolBar onToolSelection={setSelectedTool} />
+      <TextureBar />
+      <ToolBar />
       <MapView width={100} height={100} cellSize={32} />
     </div>
 

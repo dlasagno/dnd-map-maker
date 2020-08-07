@@ -2,10 +2,10 @@ import React from 'react';
 import './TextureBar.css';
 import TexturePicker from './TexturePicker';
 
-function TextureBar(props) {
+function TextureBar() {
   return (
     <div className="TextureBar">
-      <TexturePicker onTexturePick={props.onTexturePick} />
+      <TexturePicker />
     </div>
   );
 }

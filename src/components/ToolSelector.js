@@ -4,8 +4,8 @@ import { useTool } from '../App';
 
 import tools from '../tools';
 
-function ToolSelector(props) {
-  const selectedTool = useTool();
+function ToolSelector() {
+  const [selectedTool, setSelectedTool] = useTool();
 
   return (
     <div className="ToolSelector">
@@ -15,7 +15,7 @@ function ToolSelector(props) {
           className={'tool-icon' + (selectedTool === tool ? ' active' : '')}
           src={tool.icon}
           alt=""
-          onClick={() => props.onToolSelection(tool)}
+          onClick={() => setSelectedTool(tool)}
         />
       ))}
     </div>
