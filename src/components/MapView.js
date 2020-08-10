@@ -12,13 +12,6 @@ function MapView(props) {
   const [selectedTexture] = useTexture();
   const [selectedTool] = useTool();
 
-  function handleClick(e) {
-    const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / props.cellSize);
-    const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / props.cellSize);
-
-    drawMap(x, y);
-  }
-
   function drawMap(x, y) {
     draw(setMapCells, x, y, { texture: selectedTexture });
   }
@@ -35,8 +28,9 @@ function MapView(props) {
     <div
       className="MapView"
       style={{
-        width: props.width * props.cellSize,
-        height: props.height * props.cellSize
+        maxWidth: '100%',
+        maxHeight: '100%'
+        //overflow: 'auto'
       }}
       {...selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize })}
     >
