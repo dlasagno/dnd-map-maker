@@ -29,8 +29,8 @@ function MapView(props) {
       className="MapView"
       style={{
         maxWidth: '100%',
-        maxHeight: '100%'
-        //overflow: 'auto'
+        maxHeight: '100%',
+        overflow: 'auto'
       }}
       {...selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize })}
     >
