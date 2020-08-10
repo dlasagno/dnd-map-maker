@@ -4,8 +4,8 @@ import icon from './square.svg';
 const rectangle = new Tool('Rectangle', icon);
 
 rectangle.listenTo('onMouseDown', ({ cellSize }, e) => {
-  const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / cellSize);
-  const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / cellSize);
+  const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / cellSize);
+  const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
 
   rectangle.firstCoordinate = [x, y];
 })
@@ -14,7 +14,7 @@ rectangle.listenTo('onMouseUp', ({ drawMap, cellSize }, e) => {
     if (rectangle.firstCoordinate) {
         let [x0, y0] = rectangle.firstCoordinate;
         let x1 = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / cellSize);
-        let y1 = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / cellSize);
+        let y1 = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
 
         if (e.shiftKey) {
             x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
@@ -41,8 +41,8 @@ rectangle.listenTo('onMouseMove onKeyDown onKeyUp', ({ drawPreview, clearPreview
 
   if (rectangle.firstCoordinate) {
     let [x0, y0] = rectangle.firstCoordinate;
-    let x1 = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x) / cellSize);
-    let y1 = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y) / cellSize);
+    let x1 = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / cellSize);
+    let y1 = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
     rectangle.lastCoordinate = [x1, y1];
 
     if (e.shiftKey) {
