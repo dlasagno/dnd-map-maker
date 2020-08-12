@@ -1,6 +1,6 @@
 import React from 'react';
 import './TexturePicker.css';
-import { useTexture } from '../App'
+import { useTexture } from '../context/TextureContext';
 
 import textures from '../textures';
 

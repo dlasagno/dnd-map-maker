@@ -1,6 +1,6 @@
 import React from 'react';
 import './ToolSelector.css';
-import { useTool } from '../App';
+import { useTool } from '../context/ToolContext';
 
 import tools from '../tools';
 

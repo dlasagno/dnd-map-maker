@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useTexture, useTool } from '../App';
+import { useTexture } from '../context/TextureContext';
+import { useTool } from '../context/ToolContext';
+import { useCoordinates } from '../context/CoordinatesContext';
 import './MapView.css'
 
 import GridLayer from './GridLayer';
@@ -11,6 +13,9 @@ function MapView(props) {
 
   const [selectedTexture] = useTexture();
   const [selectedTool] = useTool();
+  const [, setCurrentCoordinates] = useCoordinates();
+
+  const toolEventHandlers = selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize });
 
   function drawMap(x, y) {
     draw(setMapCells, x, y, { texture: selectedTexture });
@@ -32,7 +37,15 @@ function MapView(props) {
         maxHeight: '100%',
         overflow: 'auto'
       }}
-      {...selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize })}
+      {...toolEventHandlers}
+      onMouseMove={e => {
+        const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / props.cellSize);
+        const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / props.cellSize);
+        
+        setCurrentCoordinates([x, y]);
+
+        if (toolEventHandlers.onMouseMove) toolEventHandlers.onMouseMove(e);
+      }}
     >
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={mapCells} />
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={previewCells} />
