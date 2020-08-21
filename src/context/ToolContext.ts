@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 
-const ToolContext = React.createContext<[any, (texture: any) => void] | string>('selectedTool');
+export type ToolValue = [any, (texture: any) => void];
+
+const ToolContext = React.createContext<ToolValue | string>('selectedTool');
 
 export function useTool() {
   return useContext(ToolContext);
