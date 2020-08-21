@@ -1,3 +1,5 @@
+import { SyntheticEvent } from "react";
+
 export interface ToolHelpers {
   drawMap: (x: number, y: number) => void,
   drawPreview: (x: number, y: number) => void,
@@ -5,7 +7,7 @@ export interface ToolHelpers {
   cellSize: number
 }
 
-type EventHandler = (helpers: ToolHelpers, e: Event) => void;
+type EventHandler = (helpers: ToolHelpers, e: SyntheticEvent) => void;
 
 export class Tool {
 
@@ -23,10 +25,10 @@ export class Tool {
 
   getEventHandlers(helpers: ToolHelpers) {
     const eventHandlers: {
-      [key: string]: (e: Event) => void
+      [key: string]: (e: SyntheticEvent) => void
     } = {};
     for (const [event, handler] of this._eventHandlers) {
-      eventHandlers[event] = (e: Event) => handler(helpers, e);
+      eventHandlers[event] = (e: SyntheticEvent) => handler(helpers, e);
     }
     return eventHandlers;
   }

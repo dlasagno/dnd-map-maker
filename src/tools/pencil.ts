@@ -1,5 +1,6 @@
 import { Tool } from './tool';
 import icon from './pencil.svg';
+import React from 'react';
 
 const pencil = new Tool('Pencil', icon);
 
@@ -14,7 +15,7 @@ pencil.listenTo('onMouseMove', ({ drawMap, drawPreview, clearPreview, cellSize }
 
   clearPreview();
   drawPreview(x, y);
-  if ((e as MouseEvent).buttons === 1)
+  if ((e as React.MouseEvent).buttons === 1)
     drawMap(x, y);
 });
 

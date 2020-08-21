@@ -1,5 +1,6 @@
 import { Tool } from './tool';
 import icon from './square.svg';
+import React from 'react';
 
 const rectangle = new Tool('Rectangle', icon);
 
@@ -16,11 +17,11 @@ rectangle.listenTo('onMouseUp', ({ drawMap, cellSize }, e) => {
         let [x0, y0] = firstCoordinate;
         let [x1, y1] = Tool.getGridCoordinates(e, cellSize);
 
-        if ((e as MouseEvent).shiftKey) {
+        if ((e as React.MouseEvent).shiftKey) {
             x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
             y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
         }
-        if ((e as MouseEvent).altKey) {
+        if ((e as React.MouseEvent).altKey) {
             x0 = x0 + x0-x1;
             y0 = y0 + y0-y1;
         }
@@ -43,11 +44,11 @@ rectangle.listenTo('onMouseMove onKeyDown onKeyUp', ({ drawPreview, clearPreview
     let [x0, y0] = firstCoordinate;
     let [x1, y1] = Tool.getGridCoordinates(e, cellSize);
 
-    if ((e as MouseEvent).shiftKey) {
+    if ((e as React.MouseEvent).shiftKey) {
         x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
         y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
     }
-    if ((e as MouseEvent).altKey) {
+    if ((e as React.MouseEvent).altKey) {
         x0 = x0 + x0-x1;
         y0 = y0 + y0-y1;
     }
