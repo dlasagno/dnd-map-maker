@@ -1,27 +1,41 @@
 import React, { useState } from 'react';
-import { useTexture } from '../context/TextureContext';
-import { useTool } from '../context/ToolContext';
-import { useCoordinates } from '../context/CoordinatesContext';
+import { useTexture, TextureValue } from '../context/TextureContext';
+import { useTool, ToolValue } from '../context/ToolContext';
+import { useCoordinates, CoordinateValue } from '../context/CoordinatesContext';
 import './MapView.css'
 
 import GridLayer from './GridLayer';
 import MapLayer from './MapLayer';
 
-function MapView(props) {
-  const [mapCells, setMapCells] = useState([]);
-  const [previewCells, setPreviewCells] = useState([]);
+import Texture from '../common/texture';
 
-  const [selectedTexture] = useTexture();
-  const [selectedTool] = useTool();
-  const [, setCurrentCoordinates] = useCoordinates();
+export interface Cell {
+  texture?: Texture
+}
+
+export type MapMatrix = Array<Array<Cell>>;
+
+interface Props {
+  width: number,
+  height: number,
+  cellSize: number
+}
+
+const MapView: React.FC<Props> = (props) => {
+  const [mapCells, setMapCells] = useState<MapMatrix>([]);
+  const [previewCells, setPreviewCells] = useState<MapMatrix>([]);
+
+  const [selectedTexture] = useTexture() as TextureValue;
+  const [selectedTool] = useTool() as ToolValue;
+  const [, setCurrentCoordinates] = useCoordinates() as CoordinateValue;
 
   const toolEventHandlers = selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize });
 
-  function drawMap(x, y) {
+  function drawMap(x: number, y: number) {
     draw(setMapCells, x, y, { texture: selectedTexture });
   }
 
-  function drawPreview(x, y) {
+  function drawPreview(x: number, y: number) {
     draw(setPreviewCells, x, y, { texture: selectedTexture });
   }
 
@@ -57,7 +71,7 @@ function MapView(props) {
 export default MapView;
 
 
-function draw(setCells, x, y, { texture }) {
+function draw(setCells: React.Dispatch<React.SetStateAction<MapMatrix>>, x: number, y: number, { texture }: Cell) {
   setCells(cells => {
     if (!cells[x])
         cells[x] = [];
