@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-const CoordinatesContext = React.createContext('currentCoordinates');
+const CoordinatesContext = React.createContext<[any, (texture: any) => void] | string>('currentCoordinates');
 
 export function useCoordinates() {
   return useContext(CoordinatesContext);
