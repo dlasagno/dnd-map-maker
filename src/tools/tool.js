@@ -20,6 +20,14 @@ export class Tool {
     }
     return eventHandlers;
   }
+
+  static getGridCoordinates(e, cellSize) {
+    const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / cellSize);
+    const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
+
+    return [x, y];
+  }
+
 }
 
 export default Tool;

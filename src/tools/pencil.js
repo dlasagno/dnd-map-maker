@@ -4,15 +4,13 @@ import icon from './pencil.svg';
 const pencil = new Tool('Pencil', icon);
 
 pencil.listenTo('onClick', ({ drawMap, cellSize }, e) => {
-  const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / cellSize);
-  const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
+  const [x, y] = Tool.getGridCoordinates(e, cellSize);
 
   drawMap(x, y);
 });
 
 pencil.listenTo('onMouseMove', ({ drawMap, drawPreview, clearPreview, cellSize }, e) => {
-  const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / cellSize);
-  const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / cellSize);
+  const [x, y] = Tool.getGridCoordinates(e, cellSize);
 
   clearPreview();
   drawPreview(x, y);
