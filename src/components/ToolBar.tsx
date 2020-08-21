@@ -3,7 +3,7 @@ import './ToolBar.css';
 import { useCoordinates, CoordinateValue } from '../context/CoordinatesContext'
 import ToolSelector from './ToolSelector';
 
-function ToolBar() {
+const ToolBar: React.FC = () => {
   const [[x, y]] = useCoordinates() as CoordinateValue;
 
   return (

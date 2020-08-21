@@ -10,7 +10,7 @@ import MapView from './components/MapView';
 import textures from './textures';
 import tools from './tools';
 
-function App() {
+const App: React.FC = () => {
   const [selectedTexture, setSelectedTexture] = useState(textures[0]);
   const [selectedTool, setSelectedTool] = useState(tools[0]);
   const [currentCoordinates, setCurrentCoordinates] = useState([0, 0]);

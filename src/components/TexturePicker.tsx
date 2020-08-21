@@ -4,7 +4,7 @@ import { useTexture, TextureValue } from '../context/TextureContext';
 
 import textures from '../textures';
 
-function TexturePicker() {
+const TexturePicker: React.FC = () => {
   const [, setSelectedTexture] = useTexture() as TextureValue;
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import './TextureBar.css';
 import TexturePicker from './TexturePicker';
 
-function TextureBar() {
+const TextureBar: React.FC = () => {
   return (
     <div className="TextureBar">
       <TexturePicker />

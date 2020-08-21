@@ -4,7 +4,7 @@ import { useTool, ToolValue } from '../context/ToolContext';
 
 import tools from '../tools';
 
-function ToolSelector() {
+const ToolSelector: React.FC = () => {
   const [selectedTool, setSelectedTool] = useTool() as ToolValue;
 
   return (
