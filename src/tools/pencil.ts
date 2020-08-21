@@ -14,7 +14,7 @@ pencil.listenTo('onMouseMove', ({ drawMap, drawPreview, clearPreview, cellSize }
 
   clearPreview();
   drawPreview(x, y);
-  if (e.buttons === 1)
+  if ((e as MouseEvent).buttons === 1)
     drawMap(x, y);
 });
 

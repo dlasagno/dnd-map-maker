@@ -3,50 +3,51 @@ import icon from './square.svg';
 
 const rectangle = new Tool('Rectangle', icon);
 
+let firstCoordinate: number[] | undefined;
+
 rectangle.listenTo('onMouseDown', ({ cellSize }, e) => {
   const [x, y] = Tool.getGridCoordinates(e, cellSize);
 
-  rectangle.firstCoordinate = [x, y];
+  firstCoordinate = [x, y];
 })
 
 rectangle.listenTo('onMouseUp', ({ drawMap, cellSize }, e) => {
-    if (rectangle.firstCoordinate) {
-        let [x0, y0] = rectangle.firstCoordinate;
+    if (firstCoordinate) {
+        let [x0, y0] = firstCoordinate;
         let [x1, y1] = Tool.getGridCoordinates(e, cellSize);
 
-        if (e.shiftKey) {
+        if ((e as MouseEvent).shiftKey) {
             x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
             y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
         }
-        if (e.altKey) {
+        if ((e as MouseEvent).altKey) {
             x0 = x0 + x0-x1;
             y0 = y0 + y0-y1;
         }
 
         drawRectangle(drawMap, x0, y0, x1, y1);
 
-        delete rectangle.firstCoordinate;
+        firstCoordinate = undefined;
     }
 })
 
 rectangle.listenTo('onMouseOut', ({ clearPreview }, e) => {
-    delete rectangle.firstCoordinate
+    firstCoordinate = undefined;
     clearPreview();
 })
 
 rectangle.listenTo('onMouseMove onKeyDown onKeyUp', ({ drawPreview, clearPreview, cellSize }, e) => {
   clearPreview();
 
-  if (rectangle.firstCoordinate) {
-    let [x0, y0] = rectangle.firstCoordinate;
+  if (firstCoordinate) {
+    let [x0, y0] = firstCoordinate;
     let [x1, y1] = Tool.getGridCoordinates(e, cellSize);
-    rectangle.lastCoordinate = [x1, y1];
 
-    if (e.shiftKey) {
+    if ((e as MouseEvent).shiftKey) {
         x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
         y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
     }
-    if (e.altKey) {
+    if ((e as MouseEvent).altKey) {
         x0 = x0 + x0-x1;
         y0 = y0 + y0-y1;
     }
@@ -58,7 +59,7 @@ rectangle.listenTo('onMouseMove onKeyDown onKeyUp', ({ drawPreview, clearPreview
 export default rectangle;
 
 
-function drawRectangle(draw, x0, y0, x1, y1) {
+function drawRectangle(draw: (x: number, y: number) => void, x0: number, y0: number, x1: number, y1: number) {
   for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
     draw(x, y0);
     draw(x, y1);
