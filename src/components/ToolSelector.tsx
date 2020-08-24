@@ -1,11 +1,11 @@
 import React from 'react';
 import './ToolSelector.css';
-import { useTool } from '../context/ToolContext';
+import { useTool, ToolValue } from '../context/ToolContext';
 
 import tools from '../tools';
 
-function ToolSelector() {
-  const [selectedTool, setSelectedTool] = useTool();
+const ToolSelector: React.FC = () => {
+  const [selectedTool, setSelectedTool] = useTool() as ToolValue;
 
   return (
     <div className="ToolSelector">

@@ -1,10 +1,10 @@
 import React from 'react';
 import './ToolBar.css';
-import { useCoordinates } from '../context/CoordinatesContext'
+import { useCoordinates, CoordinateValue } from '../context/CoordinatesContext'
 import ToolSelector from './ToolSelector';
 
-function ToolBar() {
-  const [[x, y]] = useCoordinates();
+const ToolBar: React.FC = () => {
+  const [[x, y]] = useCoordinates() as CoordinateValue;
 
   return (
     <div className="ToolBar">
