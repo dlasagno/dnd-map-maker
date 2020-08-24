@@ -3,7 +3,7 @@ import Texture from '../common/texture';
 
 export type TextureValue = [Texture, (texture: Texture) => void];
 
-const TextureContext = React.createContext<TextureValue | string>('selectedTexture');
+const TextureContext = React.createContext<TextureValue | null>(null);
 
 export function useTexture() {
   return useContext(TextureContext);

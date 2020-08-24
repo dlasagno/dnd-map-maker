@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTexture, TextureValue } from '../context/TextureContext';
 import { useTool, ToolValue } from '../context/ToolContext';
 import { useCoordinates, CoordinateValue } from '../context/CoordinatesContext';
 import './MapView.css'
@@ -8,6 +7,8 @@ import GridLayer from './GridLayer';
 import MapLayer from './MapLayer';
 
 import Texture from '../common/texture';
+import { Drawing } from '../common/tool';
+
 
 export interface Cell {
   texture?: Texture
@@ -15,7 +16,8 @@ export interface Cell {
 
 export type MapMatrix = Array<Array<Cell>>;
 
-interface Props {
+
+type Props = {
   width: number,
   height: number,
   cellSize: number
@@ -25,45 +27,48 @@ const MapView: React.FC<Props> = (props) => {
   const [mapCells, setMapCells] = useState<MapMatrix>([]);
   const [previewCells, setPreviewCells] = useState<MapMatrix>([]);
 
-  const [selectedTexture] = useTexture() as TextureValue;
   const [selectedTool] = useTool() as ToolValue;
   const [, setCurrentCoordinates] = useCoordinates() as CoordinateValue;
 
-  const toolEventHandlers = selectedTool.getEventHandlers({ drawMap, drawPreview, clearPreview, cellSize: props.cellSize });
 
-  function drawMap(x: number, y: number) {
-    draw(setMapCells, x, y, { texture: selectedTexture });
-  }
-
-  function drawPreview(x: number, y: number) {
-    draw(setPreviewCells, x, y, { texture: selectedTexture });
-  }
-
-  function clearPreview() {
+  const clearPreview =() => {
     setPreviewCells([]);
   }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / props.cellSize);
+    const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / props.cellSize);
+    
+    setCurrentCoordinates([x, y]);
+  }
+
+  const handleDrawMap = (drawing: Drawing) => {
+    for (const {x, y, cell} of drawing) {
+      draw(setMapCells, x, y, cell);
+    }
+  };
+
+  const handleDrawPreview = (drawing: Drawing) => {
+    clearPreview();
+    for (const {x, y, cell} of drawing) {
+      draw(setPreviewCells, x, y, cell);
+    }
+  };
+
 
   return (
     <div
       className="MapView"
-      style={{
-        maxWidth: '100%',
-        maxHeight: '100%',
-        overflow: 'auto'
-      }}
-      {...toolEventHandlers}
-      onMouseMove={e => {
-        const x = Math.floor((e.clientX - e.currentTarget.getBoundingClientRect().x + e.currentTarget.scrollLeft) / props.cellSize);
-        const y = Math.floor((e.clientY - e.currentTarget.getBoundingClientRect().y + e.currentTarget.scrollTop) / props.cellSize);
-        
-        setCurrentCoordinates([x, y]);
-
-        if (toolEventHandlers.onMouseMove) toolEventHandlers.onMouseMove(e);
-      }}
+      onMouseMove={handleMouseMove}
     >
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={mapCells} />
       <MapLayer width={props.width} height={props.height} cellSize={props.cellSize} cells={previewCells} />
       <GridLayer width={props.width} height={props.height} cellSize={props.cellSize} />
+
+      <selectedTool.Component width={props.width} height={props.height} cellSize={props.cellSize} cells={mapCells}
+        onDrawMap={handleDrawMap}
+        onDrawPreview={handleDrawPreview}
+      />
     </div>
   );
 }

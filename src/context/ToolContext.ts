@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import Tool from '../tools/tool';
+import Tool from '../common/tool';
 
 export type ToolValue = [Tool, (tool: Tool) => void];
 
-const ToolContext = React.createContext<ToolValue | string>('selectedTool');
+const ToolContext = React.createContext<ToolValue | null>(null);
 
 export function useTool() {
   return useContext(ToolContext);

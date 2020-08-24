@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import './MapLayer.css';
 
-interface Props {
+type Props = {
   width: number,
   height: number,
   cellSize: number,
@@ -9,10 +9,9 @@ interface Props {
 }
 
 const GridLayer: React.FC<Props> = (props) => {
-  const gridCanvasRef = useRef<HTMLCanvasElement>(null);
+  const gridCanvasRef = useRef<HTMLCanvasElement>(null!);
 
   useLayoutEffect(() => {
-    if (gridCanvasRef.current !== null) {
       const ctx = gridCanvasRef.current.getContext('2d');
 
       if (ctx !== null) {
@@ -31,7 +30,6 @@ const GridLayer: React.FC<Props> = (props) => {
         }
         ctx.stroke()
       }
-    }
   });
 
   return (
