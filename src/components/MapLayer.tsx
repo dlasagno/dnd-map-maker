@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import './MapLayer.css';
 
-import { MapMatrix } from './MapView';
 import Texture from '../common/texture';
+import MapMatrix from '../common/mapMatrix';
 
 type Props = {
   width: number,

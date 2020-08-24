@@ -1,4 +1,4 @@
-import { MapMatrix, Cell } from "../components/MapView";
+import MapMatrix, { Cell } from "./mapMatrix";
 
 
 export type Drawing = {
