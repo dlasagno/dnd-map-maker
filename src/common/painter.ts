@@ -1,4 +1,5 @@
-import { MapMatrix, Cell } from "../components/MapView";
+import MapMatrix, { Cell } from "./mapMatrix";
+
 
 class Painter {
 
