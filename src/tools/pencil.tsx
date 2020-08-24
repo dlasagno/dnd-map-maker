@@ -8,6 +8,9 @@ import { useCoordinates } from '../context/CoordinatesContext';
 
 
 const Pencil: ToolComponent = ({
+  width,
+  height,
+  cellSize,
   onDrawMap,
   onDrawPreview
 }) => {
@@ -41,6 +44,10 @@ const Pencil: ToolComponent = ({
   return (
     <div
       className='Tool'
+      style={{
+        width: width * cellSize,
+        height: height * cellSize
+      }}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseOut={handleMouseOut}

@@ -1,5 +1,5 @@
 import Tool, { ToolComponent, Drawing } from '../common/tool';
-import icon from './square.svg';
+import icon from './line.svg';
 import React, { useState, useEffect } from 'react';
 import '../common/tool.css';
 import { useTexture } from '../context/TextureContext';
@@ -8,7 +8,7 @@ import { useCoordinates } from '../context/CoordinatesContext';
 import { Cell } from '../common/mapMatrix';
 
 
-const Rectangle: ToolComponent = ({
+const Line: ToolComponent = ({
   width,
   height,
   cellSize,
@@ -16,7 +16,7 @@ const Rectangle: ToolComponent = ({
   onDrawPreview
 }) => {
   const [firstCoordinate, setFirstCoordinate] = useState<number[] | null>(null);
-  
+
   const [selectedTexture] = useTexture();
   const [currentCoordinates] = useCoordinates();
 
@@ -41,7 +41,7 @@ const Rectangle: ToolComponent = ({
           y0 = y0 + y0-y1;
       }
 
-      onDrawMap(drawRectangle(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
+      onDrawMap(drawLine(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
 
       setFirstCoordinate(null);
     }
@@ -61,7 +61,7 @@ const Rectangle: ToolComponent = ({
           y0 = y0 + y0-y1;
       }
 
-      onDrawPreview(drawRectangle(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
+      onDrawPreview(drawLine(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
     }
   };
 
@@ -81,7 +81,7 @@ const Rectangle: ToolComponent = ({
             y0 = y0 + y0-y1;
         }
   
-        onDrawPreview(drawRectangle(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
+        onDrawPreview(drawLine(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
       }
     };
 
@@ -96,7 +96,7 @@ const Rectangle: ToolComponent = ({
 
 
   return (
-    <div 
+    <div
       className='Tool'
       style={{
         width: width * cellSize,
@@ -109,26 +109,54 @@ const Rectangle: ToolComponent = ({
   );
 }
 
-const rectangle: Tool = {
-  name: 'rectangle',
+const line: Tool = {
+  name: 'line',
   icon,
-  Component: Rectangle
-};
+  Component: Line
+}
 
-export default rectangle;
+export default line;
 
 
-function drawRectangle(x0: number, y0: number, x1: number, y1: number, cell: Cell) {
+function drawLine(x0: number, y0: number, x1: number, y1: number, cell: Cell) {
   const drawing: Drawing = [];
 
-  for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
-    drawing.push({ x, y: y0, cell});
-    drawing.push({ x, y: y1, cell});
+  // Bresenham line drawing algorithm
+  let DX = x1 - x0;
+  let DY = y1 - y0;
+  const swap = Math.abs(DX) < Math.abs(DY);
+
+  if (swap) [DX, DY] = [DY, DX];
+
+  const a = Math.abs(DY);
+  const b = -Math.abs(DX);
+
+  let x = x0;
+  let y = y0;
+
+  let d = 2 * a + b;
+
+  let q = x0 > x1 ? -1 : 1;
+  let s = y0 > y1 ? -1 : 1;
+
+  drawing.push({ x, y, cell});
+  for (let k = 0; k < -b; k++) {
+    if (d > 0) {
+      x = x + q;
+      y = y + s;
+      d = d + 2 * (a + b);
+    }
+    else {
+      x = x + q;
+      if (swap === true) {
+        y = y + s;
+        x = x - q;
+      }
+      d = d + 2 * a;
+    }
+    drawing.push({ x, y, cell});
   }
-  for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
-    drawing.push({ x: x0, y, cell});
-    drawing.push({ x: x1, y, cell});
-  }
+  drawing.push({ x: x1, y: y1, cell});
 
   return drawing;
 }
