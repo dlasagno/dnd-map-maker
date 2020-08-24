@@ -5,7 +5,7 @@ import '../common/tool.css';
 import { useTexture } from '../context/TextureContext';
 import Texture from '../common/texture';
 import { useCoordinates } from '../context/CoordinatesContext';
-import { Cell } from '../components/MapView';
+import { Cell } from '../common/mapMatrix';
 
 
 const Rectangle: ToolComponent = ({

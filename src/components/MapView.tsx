@@ -6,15 +6,8 @@ import './MapView.css'
 import GridLayer from './GridLayer';
 import MapLayer from './MapLayer';
 
-import Texture from '../common/texture';
+import MapMatrix, { Cell } from '../common/mapMatrix';
 import { Drawing } from '../common/tool';
-
-
-export interface Cell {
-  texture?: Texture
-}
-
-export type MapMatrix = Array<Array<Cell>>;
 
 
 type Props = {
