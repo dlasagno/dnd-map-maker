@@ -42,6 +42,7 @@ const Rectangle: ToolComponent = ({
       }
 
       onDrawMap(drawRectangle(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
+      onDrawPreview([]);
 
       setFirstCoordinate(null);
     }
