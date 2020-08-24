@@ -9,9 +9,6 @@ import { Cell } from '../common/mapMatrix';
 
 
 const Rectangle: ToolComponent = ({
-  width,
-  height,
-  cellSize,
   onDrawMap,
   onDrawPreview
 }) => {
@@ -21,7 +18,7 @@ const Rectangle: ToolComponent = ({
   const [currentCoordinates] = useCoordinates();
 
 
-  const handleMouseDown: React.EventHandler<React.MouseEvent<HTMLDivElement>> = () => {
+  const handleMouseDown = () => {
     const [x, y] = currentCoordinates;
 
     setFirstCoordinate([x, y]);
@@ -64,11 +61,6 @@ const Rectangle: ToolComponent = ({
       onDrawPreview(drawRectangle(x0, y0, x1, y1, { texture: selectedTexture as Texture }));
     }
   };
-  
-  const handleMouseOut = () => {
-    setFirstCoordinate(null);
-    onDrawPreview([]);
-  }
 
 
   useEffect(() => {
@@ -103,14 +95,9 @@ const Rectangle: ToolComponent = ({
   return (
     <div 
       className='Tool'
-      style={{
-        height: height * cellSize,
-        width: width * cellSize
-      }}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
-      onMouseOut={handleMouseOut}
     />
   );
 }

@@ -37,14 +37,18 @@ const MapView: React.FC<Props> = (props) => {
 
   const handleDrawMap = (drawing: Drawing) => {
     for (const {x, y, cell} of drawing) {
-      draw(setMapCells, x, y, cell);
+      if (x < props.width && y < props.height) {
+        draw(setMapCells, x, y, cell);
+      }
     }
   };
 
   const handleDrawPreview = (drawing: Drawing) => {
     clearPreview();
     for (const {x, y, cell} of drawing) {
-      draw(setPreviewCells, x, y, cell);
+      if (x < props.width && y < props.height) {
+        draw(setPreviewCells, x, y, cell);
+      }
     }
   };
 
