@@ -36,20 +36,12 @@ const MapView: React.FC<Props> = (props) => {
   }
 
   const handleDrawMap = (drawing: Drawing) => {
-    for (const {x, y, cell} of drawing) {
-      if (x < props.width && y < props.height) {
-        draw(setMapCells, x, y, cell);
-      }
-    }
+    draw(setMapCells, drawing.filter(({ x, y }) => x < props.width && y < props.height));
   };
 
   const handleDrawPreview = (drawing: Drawing) => {
     clearPreview();
-    for (const {x, y, cell} of drawing) {
-      if (x < props.width && y < props.height) {
-        draw(setPreviewCells, x, y, cell);
-      }
-    }
+    draw(setPreviewCells, drawing.filter(({ x, y }) => x < props.width && y < props.height));
   };
 
 
@@ -73,15 +65,18 @@ const MapView: React.FC<Props> = (props) => {
 export default MapView;
 
 
-function draw(setCells: React.Dispatch<React.SetStateAction<MapMatrix>>, x: number, y: number, { texture }: Cell) {
+function draw(setCells: React.Dispatch<React.SetStateAction<MapMatrix>>, drawing: Drawing) {
   setCells(cells => {
-    if (!cells[x])
-        cells[x] = [];
-    if (!cells[x][y])
-      cells[x][y] = {};
-    
-    return cells.map((row, i) => i !== x ? row :
-      row.map((cell, j) => j !== y ? cell :
-        { ...cell, texture}));
+    for (const {x, y, cell} of drawing) {
+      if (!cells[x])
+          cells[x] = [];
+      if (!cells[x][y])
+        cells[x][y] = {};
+      
+      cells = cells.map((row, i) => i !== x ? row :
+        row.map((currentCell, j) => j !== y ? currentCell :
+          { ...currentCell, ...cell}));
+    }
+    return cells;
   });
 }
