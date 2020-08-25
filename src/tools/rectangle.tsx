@@ -1,4 +1,4 @@
-import Tool, { ToolComponent, Drawing } from '../common/tool';
+import Tool, { ToolComponent } from '../common/tool';
 import icon from './square.svg';
 import React, { useState, useEffect } from 'react';
 import '../common/tool.css';
@@ -6,6 +6,7 @@ import { useTexture } from '../context/TextureContext';
 import Texture from '../common/texture';
 import { useCoordinates } from '../context/CoordinatesContext';
 import { Cell } from '../common/mapMatrix';
+import Painter from '../common/painter';
 
 
 const Rectangle: ToolComponent = ({
@@ -120,16 +121,11 @@ export default rectangle;
 
 
 function drawRectangle(x0: number, y0: number, x1: number, y1: number, cell: Cell) {
-  const drawing: Drawing = [];
-
-  for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
-    drawing.push({ x, y: y0, cell});
-    drawing.push({ x, y: y1, cell});
-  }
-  for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
-    drawing.push({ x: x0, y, cell});
-    drawing.push({ x: x1, y, cell});
-  }
-
-  return drawing;
+  return new Painter(cell)
+    .moveTo(x0, y0)
+    .lineTo(x0, y1)
+    .lineTo(x1, y1)
+    .lineTo(x1, y0)
+    .lineTo(x0, y0)
+    .drawing;
 }
