@@ -53,6 +53,32 @@ const MapLayer: React.FC<Props> = (props) => {
 
     previousCells.current = props.cells
   }, [props.cells, props.width, props.height, props.cellSize]);
+
+  useEffect(() => {
+    const ctx = layerCanvasRef.current.getContext('2d');
+    
+    if (ctx !== null) {
+      for (
+        let x = 0; 
+        x < Math.min(Math.max(props.cells.length, previousCells.current.length), props.width);
+        x++
+      ) {
+        if (props.cells[x]) {
+          for (
+            let y = 0;
+            y < Math.min(Math.max(props.cells[x].length, previousCells.current[x] ? previousCells.current[x].length : 0),
+            props.height); y++
+          ) {
+            if (props.cells[x][y]?.texture) {
+                ctx.drawImage((props.cells[x][y].texture as Texture).image, x * props.cellSize, y * props.cellSize);
+            }
+          }
+        }
+      }
+    }
+
+    previousCells.current = props.cells
+  }, [props.width, props.height, props.cellSize]);
   
   return (
     <canvas className='MapLayer' ref={layerCanvasRef} width={props.width*props.cellSize} height={props.height*props.cellSize} />
