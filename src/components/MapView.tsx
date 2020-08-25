@@ -6,7 +6,7 @@ import './MapView.css'
 import GridLayer from './GridLayer';
 import MapLayer from './MapLayer';
 
-import MapMatrix, { Cell } from '../common/mapMatrix';
+import MapMatrix from '../common/mapMatrix';
 import { Drawing } from '../common/tool';
 
 

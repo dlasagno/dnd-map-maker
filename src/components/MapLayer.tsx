@@ -78,6 +78,7 @@ const MapLayer: React.FC<Props> = (props) => {
     }
 
     previousCells.current = props.cells
+  // eslint-disable-next-line
   }, [props.width, props.height, props.cellSize]);
   
   return (
