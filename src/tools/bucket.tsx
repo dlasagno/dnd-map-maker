@@ -25,6 +25,8 @@ const Bucket: ToolComponent = ({
     const [x, y] = currentCoordinates;
     const oldTexture = cells[x]?.[y]?.texture;
 
+    if (oldTexture === selectedTexture) return;
+
     const visited: boolean[][] = [];
     function floodFill(x: number, y: number) {
       if (x < 0 || x >= width || y < 0 || y >= height) return;
