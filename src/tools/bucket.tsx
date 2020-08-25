@@ -1,6 +1,6 @@
 import Tool, { ToolComponent, Drawing } from '../common/tool';
 import icon from './bucket.svg';
-import React from 'react';
+import React, { useRef } from 'react';
 import '../common/tool.css';
 import { useTexture } from '../context/TextureContext';
 import Texture from '../common/texture';
@@ -12,46 +12,36 @@ const Bucket: ToolComponent = ({
   height,
   cellSize,
   cells,
-  onDrawMap,
-  onDrawPreview
+  onDrawMap
 }) => {
+  const toolDivRef = useRef<HTMLDivElement>(null!);
+
   const [selectedTexture] = useTexture();
   const [currentCoordinates] = useCoordinates();
 
 
   const handleClick = () => {
     const drawing: Drawing = [];
-    const [x0, y0] = currentCoordinates;
-    const oldTexture = cells[x0]?.[y0]?.texture;
+    const [x, y] = currentCoordinates;
+    const oldTexture = cells[x]?.[y]?.texture;
 
-    function floodFill() {
+    const visited: boolean[][] = [];
+    function floodFill(x: number, y: number) {
+      if (x < 0 || x >= width || y < 0 || y >= height) return;
+      if (cells[x]?.[y]?.texture !== oldTexture) return;
+      if (visited[x]?.[y]) return;
 
-    }
-    const queue: number[][] = [];
+      if (!visited[x]) visited[x] = [];
+      visited[x][y] = true;
+      drawing.push({ x, y, cell: { texture: selectedTexture as Texture }});
 
-    queue.push([x0, y0]);
-    while (queue.length > 0) {
-      const [x, y] = queue.pop();
-      let xWest = x;
-      let xEst = x;
-
-      const yNorth = y > 0 ? y - 1 : -1;
-      const ySouth = y < height - 1 ? y + 1 : -1;
-
-      while (xEst < width - 1 && cells[xEst+1]?.[y]?.texture === oldTexture) xEst++;
-      while (xWest > 0 && cells[xWest-1]?.[y]?.texture === oldTexture) xWest--;
-
-      for (let x = xWest; x <= xEst; x++) {
-        drawing.push({x, y, cell: {texture: selectedTexture as Texture} });
-        if (yNorth >= 0 && cells[x]?.[yNorth]?.texture === oldTexture && drawing.every(({ x: X, y: Y }) => x !== X || yNorth !== Y)) queue.push([x, yNorth]);
-        if (ySouth >= 0 && cells[x]?.[ySouth]?.texture === oldTexture && drawing.every(({ x: X, y: Y }) => x !== X || ySouth !== Y)) queue.push([x, ySouth]);
-      }
+      floodFill(x, y - 1);
+      floodFill(x + 1, y);
+      floodFill(x, y + 1);
+      floodFill(x - 1, y);
     }
 
-
-
-    // drawing.push({x, y, cell: {texture: selectedTexture as Texture} })
-    
+    floodFill(x, y);
     onDrawMap(drawing);
   };
 
@@ -63,6 +53,7 @@ const Bucket: ToolComponent = ({
         width: width * cellSize,
         height: height * cellSize
       }}
+      ref={toolDivRef}
       onClick={handleClick}
     />
   );
