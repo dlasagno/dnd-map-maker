@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 
-export type CoordinateValue = [number[], (texture: number[]) => void];
+export type CoordinateValue = [number[], (texture: number[]) => void]
 
-const CoordinatesContext = React.createContext<CoordinateValue | null>(null);
+const CoordinatesContext = React.createContext<CoordinateValue | null>(null)
 
 export function useCoordinates() {
-  return useContext(CoordinatesContext);
+  return useContext(CoordinatesContext)
 }
 
-export default CoordinatesContext;
+export default CoordinatesContext
