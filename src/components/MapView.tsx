@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTool, ToolValue } from '../context/ToolContext'
-import { useCoordinates, CoordinateValue } from '../context/CoordinatesContext'
+import { useCoordinates, CoordinatesValue } from '../context/CoordinatesContext'
 import './MapView.css'
 
 import GridLayer from './GridLayer'
@@ -15,12 +15,12 @@ type Props = {
   cellSize: number
 }
 
-const MapView: React.FC<Props> = (props) => {
+const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
   const [mapCells, setMapCells] = useState<MapMatrix>([])
   const [previewCells, setPreviewCells] = useState<MapMatrix>([])
 
   const [selectedTool] = useTool() as ToolValue
-  const [, setCurrentCoordinates] = useCoordinates() as CoordinateValue
+  const [, setCurrentCoordinates] = useCoordinates() as CoordinatesValue
 
   const clearPreview = () => {
     setPreviewCells([])
@@ -31,13 +31,13 @@ const MapView: React.FC<Props> = (props) => {
       (e.clientX -
         e.currentTarget.getBoundingClientRect().x +
         e.currentTarget.scrollLeft) /
-        props.cellSize,
+        cellSize,
     )
     const y = Math.floor(
       (e.clientY -
         e.currentTarget.getBoundingClientRect().y +
         e.currentTarget.scrollTop) /
-        props.cellSize,
+        cellSize,
     )
 
     setCurrentCoordinates([x, y])
@@ -46,7 +46,7 @@ const MapView: React.FC<Props> = (props) => {
   const handleDrawMap = (drawing: Drawing) => {
     draw(
       setMapCells,
-      drawing.filter(({ x, y }) => x < props.width && y < props.height),
+      drawing.filter(({ x, y }) => x < width && y < height),
     )
   }
 
@@ -54,34 +54,30 @@ const MapView: React.FC<Props> = (props) => {
     clearPreview()
     draw(
       setPreviewCells,
-      drawing.filter(({ x, y }) => x < props.width && y < props.height),
+      drawing.filter(({ x, y }) => x < width && y < height),
     )
   }
 
   return (
     <div className="MapView" onMouseMove={handleMouseMove}>
       <MapLayer
-        width={props.width}
-        height={props.height}
-        cellSize={props.cellSize}
+        width={width}
+        height={height}
+        cellSize={cellSize}
         cells={mapCells}
       />
       <MapLayer
-        width={props.width}
-        height={props.height}
-        cellSize={props.cellSize}
+        width={width}
+        height={height}
+        cellSize={cellSize}
         cells={previewCells}
       />
-      <GridLayer
-        width={props.width}
-        height={props.height}
-        cellSize={props.cellSize}
-      />
+      <GridLayer width={width} height={height} cellSize={cellSize} />
 
       <selectedTool.Component
-        width={props.width}
-        height={props.height}
-        cellSize={props.cellSize}
+        width={width}
+        height={height}
+        cellSize={cellSize}
         cells={mapCells}
         onDrawMap={handleDrawMap}
         onDrawPreview={handleDrawPreview}
@@ -97,18 +93,21 @@ function draw(
   drawing: Drawing,
 ) {
   setCells((cells) => {
-    for (const { x, y, cell } of drawing) {
-      if (!cells[x]) cells[x] = []
-      if (!cells[x][y]) cells[x][y] = {}
+    let newCells = cells
 
-      cells = cells.map((row, i) =>
+    drawing.forEach(({ x, y, cell }) => {
+      if (!newCells[x]) newCells[x] = []
+      if (!newCells[x][y]) newCells[x][y] = {}
+
+      newCells = newCells.map((row, i) =>
         i !== x
           ? row
           : row.map((currentCell, j) =>
               j !== y ? currentCell : { ...currentCell, ...cell },
             ),
       )
-    }
-    return cells
+    })
+
+    return newCells
   })
 }

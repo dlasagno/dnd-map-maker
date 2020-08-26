@@ -1,6 +1,6 @@
+import React from 'react'
 import Tool, { ToolComponent, Drawing } from '../common/tool'
 import icon from './pencil.svg'
-import React from 'react'
 import '../common/tool.css'
 import { useTexture } from '../context/TextureContext'
 import Texture from '../common/texture'
@@ -25,7 +25,7 @@ const Pencil: ToolComponent = ({
     onDrawMap(drawing)
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const [x, y] = currentCoordinates
 
     onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
@@ -39,15 +39,18 @@ const Pencil: ToolComponent = ({
   }
 
   return (
-    <div
+    <button
       className="Tool"
       style={{
         width: width * cellSize,
         height: height * cellSize,
       }}
+      type="button"
+      aria-label="bucket"
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseOut={handleMouseOut}
+      onBlur={handleMouseOut}
     />
   )
 }

@@ -1,7 +1,7 @@
 import Texture from '../common/texture'
 
 function importAll(r: __WebpackModuleApi.RequireContext) {
-  return r.keys().map((key) => [key, r(key)])
+  return r.keys().map((key) => [key, r(key) as string])
 }
 
 const textures = importAll(require.context('../textures', true, /\.png$/)).map(

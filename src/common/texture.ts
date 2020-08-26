@@ -1,7 +1,7 @@
 class Texture {
   constructor(readonly name: string, readonly path: string) {}
 
-  get image() {
+  get image(): HTMLImageElement {
     const img = document.createElement('img')
     img.src = this.path
     return img

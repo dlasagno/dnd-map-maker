@@ -4,25 +4,25 @@ import { Drawing } from './tool'
 class Painter {
   cell: Cell
   private cursor: number[]
-  private _drawing: Drawing
+  private internalDrawing: Drawing
 
-  constructor(cell: Cell, x: number = 0, y: number = 0) {
+  constructor(cell: Cell, x = 0, y = 0) {
     this.cell = cell
     this.cursor = [x, y]
-    this._drawing = []
+    this.internalDrawing = []
   }
 
-  get drawing() {
-    return this._drawing
+  get drawing(): Drawing {
+    return this.internalDrawing
   }
 
-  moveTo(x: number, y: number) {
+  moveTo(x: number, y: number): Painter {
     this.cursor = [x, y]
 
     return this
   }
 
-  lineTo(x: number, y: number) {
+  lineTo(x: number, y: number): Painter {
     const [x0, y0] = this.cursor
 
     this.drawLine(x0, y0, x, y)
@@ -31,7 +31,7 @@ class Painter {
     return this
   }
 
-  drawLine(x0: number, y0: number, x1: number, y1: number) {
+  drawLine(x0: number, y0: number, x1: number, y1: number): Painter {
     // Bresenham line drawing algorithm
     let DX = x1 - x0
     let DY = y1 - y0
@@ -47,26 +47,26 @@ class Painter {
 
     let d = 2 * a + b
 
-    let q = x0 > x1 ? -1 : 1
-    let s = y0 > y1 ? -1 : 1
+    const q = x0 > x1 ? -1 : 1
+    const s = y0 > y1 ? -1 : 1
 
-    this._drawing.push({ x, y, cell: this.cell })
-    for (let k = 0; k < -b; k++) {
+    this.internalDrawing.push({ x, y, cell: this.cell })
+    for (let k = 0; k < -b; k += 1) {
       if (d > 0) {
-        x = x + q
-        y = y + s
-        d = d + 2 * (a + b)
+        x += q
+        y += s
+        d += 2 * (a + b)
       } else {
-        x = x + q
+        x += q
         if (swap === true) {
-          y = y + s
-          x = x - q
+          y += s
+          x -= q
         }
-        d = d + 2 * a
+        d += 2 * a
       }
-      this._drawing.push({ x, y, cell: this.cell })
+      this.internalDrawing.push({ x, y, cell: this.cell })
     }
-    this._drawing.push({ x: x1, y: y1, cell: this.cell })
+    this.internalDrawing.push({ x: x1, y: y1, cell: this.cell })
 
     return this
   }

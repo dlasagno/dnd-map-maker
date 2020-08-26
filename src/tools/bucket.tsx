@@ -1,6 +1,6 @@
+import React, { useRef } from 'react'
 import Tool, { ToolComponent, Drawing } from '../common/tool'
 import icon from './bucket.svg'
-import React, { useRef } from 'react'
 import '../common/tool.css'
 import { useTexture } from '../context/TextureContext'
 import Texture from '../common/texture'
@@ -13,15 +13,15 @@ const Bucket: ToolComponent = ({
   cells,
   onDrawMap,
 }) => {
-  const toolDivRef = useRef<HTMLDivElement>(null!)
+  const toolDivRef = useRef<HTMLButtonElement>(null)
 
   const [selectedTexture] = useTexture()
   const [currentCoordinates] = useCoordinates()
 
   const handleClick = () => {
     const drawing: Drawing = []
-    const [x, y] = currentCoordinates
-    const oldTexture = cells[x]?.[y]?.texture
+    const [x0, y0] = currentCoordinates
+    const oldTexture = cells[x0]?.[y0]?.texture
 
     if (oldTexture === selectedTexture) return
 
@@ -41,17 +41,19 @@ const Bucket: ToolComponent = ({
       floodFill(x - 1, y)
     }
 
-    floodFill(x, y)
+    floodFill(x0, y0)
     onDrawMap(drawing)
   }
 
   return (
-    <div
+    <button
       className="Tool"
       style={{
         width: width * cellSize,
         height: height * cellSize,
       }}
+      type="button"
+      aria-label="bucket"
       ref={toolDivRef}
       onClick={handleClick}
     />

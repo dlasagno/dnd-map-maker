@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from 'react'
 import Tool, { ToolComponent } from '../common/tool'
 import icon from './square.svg'
-import React, { useState, useEffect } from 'react'
 import '../common/tool.css'
 import { useTexture } from '../context/TextureContext'
 import Texture from '../common/texture'
@@ -26,7 +26,7 @@ const Rectangle: ToolComponent = ({
     setFirstCoordinate([x, y])
   }
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (firstCoordinate) {
       let [x0, y0] = firstCoordinate
       let [x1, y1] = currentCoordinates
@@ -53,7 +53,7 @@ const Rectangle: ToolComponent = ({
     }
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (firstCoordinate) {
       let [x0, y0] = firstCoordinate
       let [x1, y1] = currentCoordinates
@@ -114,12 +114,14 @@ const Rectangle: ToolComponent = ({
   }, [firstCoordinate, onDrawPreview, selectedTexture, currentCoordinates])
 
   return (
-    <div
+    <button
       className="Tool"
       style={{
         width: width * cellSize,
         height: height * cellSize,
       }}
+      type="button"
+      aria-label="bucket"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}

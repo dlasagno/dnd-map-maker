@@ -8,17 +8,22 @@ type Props = {
   gridColor?: string
 }
 
-const GridLayer: React.FC<Props> = (props) => {
-  const gridCanvasRef = useRef<HTMLCanvasElement>(null!)
+const GridLayer: React.FC<Props> = ({
+  width,
+  height,
+  cellSize,
+  gridColor = 'rgba(255, 255, 255, 0.35)',
+}) => {
+  const gridCanvasRef = useRef<HTMLCanvasElement>(null)
 
   useLayoutEffect(() => {
+    if (gridCanvasRef.current === null) return
+
     const ctx = gridCanvasRef.current.getContext('2d')
 
     if (ctx !== null) {
       ctx.lineWidth = 1
-      ctx.strokeStyle = props.gridColor
-        ? props.gridColor
-        : 'rgba(255, 255, 255, 0.35)'
+      ctx.strokeStyle = gridColor
 
       ctx.clearRect(
         0,
@@ -27,13 +32,13 @@ const GridLayer: React.FC<Props> = (props) => {
         gridCanvasRef.current.height,
       )
       ctx.beginPath()
-      for (let x = 1; x < props.width; x++) {
-        ctx.moveTo(x * props.cellSize + 0.5, 0)
-        ctx.lineTo(x * props.cellSize + 0.5, gridCanvasRef.current.height)
+      for (let x = 1; x < width; x += 1) {
+        ctx.moveTo(x * cellSize + 0.5, 0)
+        ctx.lineTo(x * cellSize + 0.5, gridCanvasRef.current.height)
       }
-      for (let y = 1; y < props.height; y++) {
-        ctx.moveTo(0, y * props.cellSize + 0.5)
-        ctx.lineTo(gridCanvasRef.current.width, y * props.cellSize + 0.5)
+      for (let y = 1; y < height; y += 1) {
+        ctx.moveTo(0, y * cellSize + 0.5)
+        ctx.lineTo(gridCanvasRef.current.width, y * cellSize + 0.5)
       }
       ctx.stroke()
     }
@@ -43,8 +48,8 @@ const GridLayer: React.FC<Props> = (props) => {
     <canvas
       className="MapLayer"
       ref={gridCanvasRef}
-      width={props.width * props.cellSize}
-      height={props.height * props.cellSize}
+      width={width * cellSize}
+      height={height * cellSize}
     />
   )
 }

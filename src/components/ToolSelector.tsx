@@ -10,13 +10,13 @@ const ToolSelector: React.FC = () => {
   return (
     <div className="ToolSelector">
       {tools.map((tool) => (
-        <img
-          key={tool.name}
-          className={'tool-icon' + (selectedTool === tool ? ' active' : '')}
-          src={tool.icon}
-          alt=""
+        <button
+          className={`tool-icon ${selectedTool === tool ? 'active' : ''}`}
+          type="button"
           onClick={() => setSelectedTool(tool)}
-        />
+        >
+          <img key={tool.name} className="tool-icon" src={tool.icon} alt="" />
+        </button>
       ))}
     </div>
   )
