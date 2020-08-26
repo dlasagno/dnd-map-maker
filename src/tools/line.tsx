@@ -1,131 +1,150 @@
-import Tool, { ToolComponent } from '../common/tool';
-import icon from './line.svg';
-import React, { useState, useEffect } from 'react';
-import '../common/tool.css';
-import { useTexture } from '../context/TextureContext';
-import Texture from '../common/texture';
-import { useCoordinates } from '../context/CoordinatesContext';
-import Painter from '../common/painter';
-
+import React, { useState, useEffect } from 'react'
+import Tool, { ToolComponent } from '../common/tool'
+import icon from './line.svg'
+import '../common/tool.css'
+import { useTexture } from '../context/TextureContext'
+import Texture from '../common/texture'
+import { useCoordinates } from '../context/CoordinatesContext'
+import Painter from '../common/painter'
 
 const Line: ToolComponent = ({
   width,
   height,
   cellSize,
   onDrawMap,
-  onDrawPreview
+  onDrawPreview,
 }) => {
-  const [firstCoordinate, setFirstCoordinate] = useState<number[] | null>(null);
+  const [firstCoordinate, setFirstCoordinate] = useState<number[] | null>(null)
 
-  const [selectedTexture] = useTexture();
-  const [currentCoordinates] = useCoordinates();
-
+  const [selectedTexture] = useTexture()
+  const [currentCoordinates] = useCoordinates()
 
   const handleMouseDown = () => {
-    const [x, y] = currentCoordinates;
+    const [x, y] = currentCoordinates
 
-    setFirstCoordinate([x, y]);
+    setFirstCoordinate([x, y])
   }
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (firstCoordinate) {
-      let [x0, y0] = firstCoordinate;
-      let [x1, y1] = currentCoordinates;
+      let [x0, y0] = firstCoordinate
+      let [x1, y1] = currentCoordinates
 
       if (e.shiftKey) {
-          x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
-          y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
+        x1 =
+          x0 +
+          Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
+        y1 =
+          y0 +
+          Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
       }
       if (e.altKey) {
-          x0 = x0 + x0-x1;
-          y0 = y0 + y0-y1;
+        x0 = x0 + x0 - x1
+        y0 = y0 + y0 - y1
       }
 
       onDrawMap(
-        new Painter({ texture: selectedTexture as Texture })
-          .drawLine(x0, y0, x1, y1)
-          .drawing
-      );
-      onDrawPreview([]);
+        new Painter({ texture: selectedTexture as Texture }).drawLine(
+          x0,
+          y0,
+          x1,
+          y1,
+        ).drawing,
+      )
+      onDrawPreview([])
 
-      setFirstCoordinate(null);
+      setFirstCoordinate(null)
     }
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (firstCoordinate) {
-      let [x0, y0] = firstCoordinate;
-      let [x1, y1] = currentCoordinates;
+      let [x0, y0] = firstCoordinate
+      let [x1, y1] = currentCoordinates
 
       if (e.shiftKey) {
-          x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
-          y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
+        x1 =
+          x0 +
+          Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
+        y1 =
+          y0 +
+          Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
       }
       if (e.altKey) {
-          x0 = x0 + x0-x1;
-          y0 = y0 + y0-y1;
+        x0 = x0 + x0 - x1
+        y0 = y0 + y0 - y1
       }
 
       onDrawPreview(
-        new Painter({ texture: selectedTexture as Texture })
-          .drawLine(x0, y0, x1, y1)
-          .drawing
-      );
+        new Painter({ texture: selectedTexture as Texture }).drawLine(
+          x0,
+          y0,
+          x1,
+          y1,
+        ).drawing,
+      )
     }
-  };
-
+  }
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (firstCoordinate) {
-        let [x0, y0] = firstCoordinate;
-        let [x1, y1] = currentCoordinates;
-  
+        let [x0, y0] = firstCoordinate
+        let [x1, y1] = currentCoordinates
+
         if (e.shiftKey) {
-            x1 = x0 + Math.sign(x1-x0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
-            y1 = y0 + Math.sign(y1-y0)*Math.max(Math.abs(x1-x0), Math.abs(y1-y0));
+          x1 =
+            x0 +
+            Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
+          y1 =
+            y0 +
+            Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
         }
         if (e.altKey) {
-            x0 = x0 + x0-x1;
-            y0 = y0 + y0-y1;
+          x0 = x0 + x0 - x1
+          y0 = y0 + y0 - y1
         }
-  
-        onDrawPreview(
-          new Painter({ texture: selectedTexture as Texture })
-          .drawLine(x0, y0, x1, y1)
-          .drawing
-        );
-      }
-    };
 
-    document.addEventListener('keydown', handleKey);
-    document.addEventListener('keyup', handleKey);
+        onDrawPreview(
+          new Painter({ texture: selectedTexture as Texture }).drawLine(
+            x0,
+            y0,
+            x1,
+            y1,
+          ).drawing,
+        )
+      }
+    }
+
+    document.addEventListener('keydown', handleKey)
+    document.addEventListener('keyup', handleKey)
 
     return () => {
-      document.removeEventListener('keydown', handleKey);
-      document.removeEventListener('keyup', handleKey);
+      document.removeEventListener('keydown', handleKey)
+      document.removeEventListener('keyup', handleKey)
     }
-  }, [firstCoordinate, onDrawPreview, selectedTexture, currentCoordinates]);
-
+  }, [firstCoordinate, onDrawPreview, selectedTexture, currentCoordinates])
 
   return (
-    <div
-      className='Tool'
+    <button
+      className="Tool"
       style={{
         width: width * cellSize,
-        height: height * cellSize
+        height: height * cellSize,
       }}
+      type="button"
+      aria-label="bucket"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
     />
-  );
+  )
 }
 
 const line: Tool = {
   name: 'line',
   icon,
-  Component: Line
+  Component: Line,
 }
 
-export default line;
+export default line

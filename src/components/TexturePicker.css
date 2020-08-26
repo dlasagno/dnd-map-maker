@@ -3,9 +3,20 @@
   align-items: center;
   padding: 14px;
 }
-.TexturePicker > img:not(:last-child) {
+
+.TexturePicker button {
+  display: block;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.TexturePicker button:not(:last-child) {
   margin-right: 14px;
 }
-.TexturePicker > img:hover {
+
+.TexturePicker button:hover img {
   outline: 1px solid var(--primary);
 }

@@ -1,19 +1,21 @@
-import React from 'react';
-import './TexturePicker.css';
-import { useTexture, TextureValue } from '../context/TextureContext';
+import React from 'react'
+import './TexturePicker.css'
+import { useTexture, TextureValue } from '../context/TextureContext'
 
-import textures from '../textures';
+import textures from '../textures'
 
 const TexturePicker: React.FC = () => {
-  const [, setSelectedTexture] = useTexture() as TextureValue;
+  const [, setSelectedTexture] = useTexture() as TextureValue
 
   return (
-    <div className='TexturePicker'>
-      {textures.map((texture: any) => (
-        <img key={texture.name} src={texture.path} alt='' onClick={() => setSelectedTexture(texture)}></img>
+    <div className="TexturePicker">
+      {textures.map((texture) => (
+        <button type="button" onClick={() => setSelectedTexture(texture)}>
+          <img key={texture.name} src={texture.path} alt="" />
+        </button>
       ))}
     </div>
-  );
+  )
 }
 
-export default TexturePicker;
+export default TexturePicker
