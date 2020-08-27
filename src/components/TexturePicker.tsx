@@ -10,8 +10,12 @@ const TexturePicker: React.FC = () => {
   return (
     <div className="TexturePicker">
       {textures.map((texture) => (
-        <button type="button" onClick={() => setSelectedTexture(texture)}>
-          <img key={texture.name} src={texture.path} alt="" />
+        <button
+          key={texture.name}
+          type="button"
+          onClick={() => setSelectedTexture(texture)}
+        >
+          <img src={texture.path} alt="" />
         </button>
       ))}
     </div>
