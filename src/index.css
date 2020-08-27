@@ -5,7 +5,14 @@
   --text: #dedede;
 }
 
+html {
+  height: 100%;
+
+  background: var(--background);
+}
+
 body {
+  height: 100%;
   margin: 0;
 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -14,6 +21,11 @@ body {
   font-size: 18pt;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  overflow: auto;
 }
 
 code {
