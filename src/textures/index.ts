@@ -1,14 +1,12 @@
 import Texture from '../common/texture'
 
-function importAll(r: __WebpackModuleApi.RequireContext) {
-  return r.keys().map((key) => [key, r(key) as string])
-}
-
-const textures = importAll(require.context('../textures', true, /\.png$/)).map(
-  ([key, path]) =>
+const req = require.context('./', true, /\.png$/)
+const textures = req.keys().map(
+  (key) =>
     new Texture(
-      (/(?<=\/).*(?=\.[^/]+$)/.exec(key) as RegExpExecArray)[0],
-      path,
+      // (/(?<=\/).*(?=\.[^/]+$)/.exec(key) as RegExpExecArray)[0],
+      (/\/(.*)\.png$/.exec(key) as RegExpExecArray)[1],
+      req(key),
     ),
 )
 
