@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Tool, { ToolComponent } from '../common/tool'
 import icon from './square.svg'
-import '../common/tool.css'
-import { useTexture } from '../context/TextureContext'
-import Texture from '../common/texture'
-import { useCoordinates } from '../context/CoordinatesContext'
+import Shape from './shape'
 import { Cell } from '../common/mapMatrix'
 import Painter from '../common/painter'
 
@@ -12,130 +9,31 @@ const Ellipse: ToolComponent = ({
   width,
   height,
   cellSize,
+  cells,
   onDrawMap,
   onDrawPreview,
 }) => {
-  const [firstCoordinate, setFirstCoordinate] = useState<number[] | null>(null)
-
-  const [selectedTexture] = useTexture()
-  const [currentCoordinates] = useCoordinates()
-
-  const handleMouseDown = () => {
-    const [x, y] = currentCoordinates
-
-    setFirstCoordinate([x, y])
-  }
-
-  const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (firstCoordinate) {
-      let [x0, y0] = firstCoordinate
-      let [x1, y1] = currentCoordinates
-
-      if (e.shiftKey) {
-        x1 =
-          x0 +
-          Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-        y1 =
-          y0 +
-          Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-      }
-      if (e.altKey) {
-        x0 = x0 + x0 - x1
-        y0 = y0 + y0 - y1
-      }
-
-      onDrawMap(
-        drawEllipse(x0, y0, x1, y1, { texture: selectedTexture as Texture }),
-      )
-      onDrawPreview([])
-
-      setFirstCoordinate(null)
-    }
-  }
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (firstCoordinate) {
-      let [x0, y0] = firstCoordinate
-      let [x1, y1] = currentCoordinates
-
-      if (e.shiftKey) {
-        x1 =
-          x0 +
-          Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-        y1 =
-          y0 +
-          Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-      }
-      if (e.altKey) {
-        x0 = x0 + x0 - x1
-        y0 = y0 + y0 - y1
-      }
-
-      onDrawPreview(
-        drawEllipse(x0, y0, x1, y1, { texture: selectedTexture as Texture }),
-      )
-    }
-  }
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (firstCoordinate) {
-        let [x0, y0] = firstCoordinate
-        let [x1, y1] = currentCoordinates
-
-        if (e.shiftKey) {
-          x1 =
-            x0 +
-            Math.sign(x1 - x0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-          y1 =
-            y0 +
-            Math.sign(y1 - y0) * Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0))
-        }
-        if (e.altKey) {
-          x0 = x0 + x0 - x1
-          y0 = y0 + y0 - y1
-        }
-
-        onDrawPreview(
-          drawEllipse(x0, y0, x1, y1, {
-            texture: selectedTexture as Texture,
-          }),
-        )
-      }
-    }
-
-    document.addEventListener('keydown', handleKey)
-    document.addEventListener('keyup', handleKey)
-
-    return () => {
-      document.removeEventListener('keydown', handleKey)
-      document.removeEventListener('keyup', handleKey)
-    }
-  }, [firstCoordinate, onDrawPreview, selectedTexture, currentCoordinates])
-
   return (
-    <button
-      className="Tool"
-      style={{
-        width: width * cellSize,
-        height: height * cellSize,
-      }}
-      type="button"
-      aria-label="bucket"
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
+    <Shape
+      width={width}
+      height={height}
+      cellSize={cellSize}
+      cells={cells}
+      onDrawMap={onDrawMap}
+      onDrawPreview={onDrawPreview}
+      label="ellipse"
+      drawShape={drawEllipse}
     />
   )
 }
 
-const rectangle: Tool = {
+const ellipse: Tool = {
   name: 'ellipse',
   icon,
   Component: Ellipse,
 }
 
-export default rectangle
+export default ellipse
 
 function drawEllipse(
   x0: number,
@@ -149,7 +47,7 @@ function drawEllipse(
   const y = (y0 + y1) / 2
   const r1 = Math.abs(x - x0)
   const r2 = Math.abs(y - y0)
-  const numberOfLines = 100
+  const numberOfLines = (r1 + r2) * 4
 
   const painter = new Painter(
     cell,

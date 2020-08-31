@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useTool, ToolValue } from '../context/ToolContext'
 import { useCoordinates, CoordinatesValue } from '../context/CoordinatesContext'
 import './MapView.css'
@@ -20,13 +20,13 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
   const [previewCells, setPreviewCells] = useState<MapMatrix>([])
 
   const [selectedTool] = useTool() as ToolValue
-  const [, setCurrentCoordinates] = useCoordinates() as CoordinatesValue
-
-  const clearPreview = () => {
-    setPreviewCells([])
-  }
+  const [
+    currentCoordinates,
+    setCurrentCoordinates,
+  ] = useCoordinates() as CoordinatesValue
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    const [x0, y0] = currentCoordinates
     const x = Math.floor(
       (e.clientX -
         e.currentTarget.getBoundingClientRect().x +
@@ -40,23 +40,35 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
         cellSize,
     )
 
-    setCurrentCoordinates([x, y])
+    if (x !== x0 || y !== y0) {
+      setCurrentCoordinates([x, y])
+    }
   }
 
-  const handleDrawMap = (drawing: Drawing) => {
-    draw(
-      setMapCells,
-      drawing.filter(({ x, y }) => x < width && y < height),
-    )
+  const clearPreview = () => {
+    setPreviewCells([])
   }
 
-  const handleDrawPreview = (drawing: Drawing) => {
-    clearPreview()
-    draw(
-      setPreviewCells,
-      drawing.filter(({ x, y }) => x < width && y < height),
-    )
-  }
+  const handleDrawMap = useCallback(
+    (drawing: Drawing) => {
+      draw(
+        setMapCells,
+        drawing.filter(({ x, y }) => x < width && y < height),
+      )
+    },
+    [width, height],
+  )
+
+  const handleDrawPreview = useCallback(
+    (drawing: Drawing) => {
+      clearPreview()
+      draw(
+        setPreviewCells,
+        drawing.filter(({ x, y }) => x < width && y < height),
+      )
+    },
+    [width, height],
+  )
 
   return (
     <div className="MapView" onMouseMove={handleMouseMove}>

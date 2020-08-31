@@ -1,5 +1,5 @@
-import React from 'react'
-import Tool, { ToolComponent, Drawing } from '../common/tool'
+import React, { useState, useEffect } from 'react'
+import Tool, { ToolComponent } from '../common/tool'
 import icon from './pencil.svg'
 import '../common/tool.css'
 import { useTexture } from '../context/TextureContext'
@@ -13,30 +13,35 @@ const Pencil: ToolComponent = ({
   onDrawMap,
   onDrawPreview,
 }) => {
+  const [isDrawing, setIsDrawing] = useState(false)
+
   const [selectedTexture] = useTexture()
   const [currentCoordinates] = useCoordinates()
 
-  const handleClick = () => {
-    const drawing: Drawing = []
+  const handleMouseDown = () => {
     const [x, y] = currentCoordinates
 
-    drawing.push({ x, y, cell: { texture: selectedTexture as Texture } })
-
-    onDrawMap(drawing)
+    setIsDrawing(true)
+    onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseUp = () => {
+    setIsDrawing(false)
+  }
+
+  const handleMouseOut = () => {
+    setIsDrawing(false)
+    onDrawPreview([])
+  }
+
+  useEffect(() => {
     const [x, y] = currentCoordinates
 
     onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
 
-    if ((e as React.MouseEvent).buttons === 1)
+    if (isDrawing)
       onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
-  }
-
-  const handleMouseOut = () => {
-    onDrawPreview([])
-  }
+  }, [currentCoordinates, selectedTexture, isDrawing, onDrawMap, onDrawPreview])
 
   return (
     <button
@@ -46,9 +51,9 @@ const Pencil: ToolComponent = ({
         height: height * cellSize,
       }}
       type="button"
-      aria-label="bucket"
-      onClick={handleClick}
-      onMouseMove={handleMouseMove}
+      aria-label="pencil"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       onMouseOut={handleMouseOut}
       onBlur={handleMouseOut}
     />
