@@ -14,6 +14,7 @@ const Pencil: ToolComponent = ({
   onDrawPreview,
 }) => {
   const [isDrawing, setIsDrawing] = useState(false)
+  const [isInside, setIsInside] = useState(false)
 
   const [selectedTexture] = useTexture()
   const [currentCoordinates] = useCoordinates()
@@ -29,19 +30,32 @@ const Pencil: ToolComponent = ({
     setIsDrawing(false)
   }
 
+  const handleMouseEnter = () => {
+    setIsInside(true)
+  }
+
   const handleMouseOut = () => {
     setIsDrawing(false)
+    setIsInside(false)
     onDrawPreview([])
   }
 
   useEffect(() => {
     const [x, y] = currentCoordinates
 
-    onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
-
-    if (isDrawing)
+    if (isDrawing) {
       onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
-  }, [currentCoordinates, selectedTexture, isDrawing, onDrawMap, onDrawPreview])
+    } else if (isInside) {
+      onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
+    }
+  }, [
+    currentCoordinates,
+    selectedTexture,
+    isDrawing,
+    isInside,
+    onDrawMap,
+    onDrawPreview,
+  ])
 
   return (
     <button
@@ -54,8 +68,11 @@ const Pencil: ToolComponent = ({
       aria-label="pencil"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
       onBlur={handleMouseOut}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
     />
   )
 }

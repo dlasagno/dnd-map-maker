@@ -30,6 +30,7 @@ const Shape: React.FC<ToolProps & Props> = ({
   label = 'shape',
   drawShape,
 }) => {
+  const [isDrawing, setIsDrawing] = useState(false)
   const [firstCoordinate, setFirstCoordinate] = useState<Coordinates2D | null>(
     null,
   )
@@ -40,9 +41,7 @@ const Shape: React.FC<ToolProps & Props> = ({
   const [currentCoordinates] = useCoordinates()
 
   const handleMouseDown = () => {
-    const [x, y] = currentCoordinates
-
-    setFirstCoordinate([x, y])
+    setIsDrawing(true)
   }
 
   const handleMouseUp = () => {
@@ -59,6 +58,7 @@ const Shape: React.FC<ToolProps & Props> = ({
       onDrawPreview([])
 
       setFirstCoordinate(null)
+      setIsDrawing(false)
     }
   }
 
@@ -76,6 +76,11 @@ const Shape: React.FC<ToolProps & Props> = ({
       document.removeEventListener('keyup', handleKey)
     }
   }, [])
+
+  useEffect(() => {
+    if (isDrawing && !firstCoordinate)
+      setFirstCoordinate(currentCoordinates as Coordinates2D)
+  }, [currentCoordinates, firstCoordinate, isDrawing])
 
   useEffect(() => {
     if (firstCoordinate) {
@@ -111,6 +116,8 @@ const Shape: React.FC<ToolProps & Props> = ({
       aria-label={label}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
     />
   )
 }

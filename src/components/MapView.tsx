@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useTool, ToolValue } from '../context/ToolContext'
 import { useCoordinates, CoordinatesValue } from '../context/CoordinatesContext'
 import './MapView.css'
@@ -18,6 +18,8 @@ type Props = {
 const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
   const [mapCells, setMapCells] = useState<MapMatrix>([])
   const [previewCells, setPreviewCells] = useState<MapMatrix>([])
+
+  const viewDivRef = useRef<HTMLDivElement>(null)
 
   const [selectedTool] = useTool() as ToolValue
   const [
@@ -42,6 +44,34 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
 
     if (x !== x0 || y !== y0) {
       setCurrentCoordinates([x, y])
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const [x0, y0] = currentCoordinates
+    const x = Math.floor(
+      (e.touches[0].clientX -
+        e.currentTarget.getBoundingClientRect().x +
+        e.currentTarget.scrollLeft) /
+        cellSize,
+    )
+    const y = Math.floor(
+      (e.touches[0].clientY -
+        e.currentTarget.getBoundingClientRect().y +
+        e.currentTarget.scrollTop) /
+        cellSize,
+    )
+
+    switch (e.touches.length) {
+      case 1:
+        if (x !== x0 || y !== y0) {
+          setCurrentCoordinates([x, y])
+        }
+        break
+      case 2:
+        break
+      default:
+        break
     }
   }
 
@@ -70,8 +100,27 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
     [width, height],
   )
 
+  useEffect(() => {
+    const viewDiv = viewDivRef.current
+    const preventDefault = (e: TouchEvent) => {
+      // if (e.touches.length === 1) {
+      e.preventDefault()
+      // }
+    }
+
+    viewDiv?.addEventListener('touchmove', preventDefault, { passive: false })
+
+    return () => viewDiv?.removeEventListener('touchmove', preventDefault)
+  }, [])
+
   return (
-    <div className="MapView" onMouseMove={handleMouseMove}>
+    <div
+      className="MapView"
+      ref={viewDivRef}
+      onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchMove}
+    >
       <MapLayer
         width={width}
         height={height}
