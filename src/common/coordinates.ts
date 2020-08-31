@@ -15,10 +15,9 @@ export function snapCoordinates(
   x: number,
   y: number,
 ): [number, number] {
-  const distance =
-    Math.sign(x - x0) * Math.max(Math.abs(x - x0), Math.abs(y - y0))
+  const distance = Math.max(Math.abs(x - x0), Math.abs(y - y0))
 
-  return [x0 + distance, y0 + distance]
+  return [x0 + Math.sign(x - x0) * distance, y0 + Math.sign(y - y0) * distance]
 }
 
 export default Coordinates2D
