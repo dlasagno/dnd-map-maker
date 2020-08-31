@@ -1,6 +1,10 @@
 import React, { useContext } from 'react'
+import Coordinates2D from '../common/coordinates'
 
-export type CoordinatesValue = [number[], (texture: number[]) => void]
+export type CoordinatesValue = [
+  Coordinates2D,
+  React.Dispatch<React.SetStateAction<Coordinates2D>>,
+]
 
 const CoordinatesContext = React.createContext<CoordinatesValue | null>(null)
 

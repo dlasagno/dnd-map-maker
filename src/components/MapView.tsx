@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useTool, ToolValue } from '../context/ToolContext'
 import { useCoordinates, CoordinatesValue } from '../context/CoordinatesContext'
 import './MapView.css'
@@ -19,14 +19,16 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
   const [mapCells, setMapCells] = useState<MapMatrix>([])
   const [previewCells, setPreviewCells] = useState<MapMatrix>([])
 
-  const [selectedTool] = useTool() as ToolValue
-  const [, setCurrentCoordinates] = useCoordinates() as CoordinatesValue
+  const viewDivRef = useRef<HTMLDivElement>(null)
 
-  const clearPreview = () => {
-    setPreviewCells([])
-  }
+  const [selectedTool] = useTool() as ToolValue
+  const [
+    currentCoordinates,
+    setCurrentCoordinates,
+  ] = useCoordinates() as CoordinatesValue
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    const [x0, y0] = currentCoordinates
     const x = Math.floor(
       (e.clientX -
         e.currentTarget.getBoundingClientRect().x +
@@ -40,26 +42,85 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
         cellSize,
     )
 
-    setCurrentCoordinates([x, y])
+    if (x !== x0 || y !== y0) {
+      setCurrentCoordinates([x, y])
+    }
   }
 
-  const handleDrawMap = (drawing: Drawing) => {
-    draw(
-      setMapCells,
-      drawing.filter(({ x, y }) => x < width && y < height),
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const [x0, y0] = currentCoordinates
+    const x = Math.floor(
+      (e.touches[0].clientX -
+        e.currentTarget.getBoundingClientRect().x +
+        e.currentTarget.scrollLeft) /
+        cellSize,
     )
+    const y = Math.floor(
+      (e.touches[0].clientY -
+        e.currentTarget.getBoundingClientRect().y +
+        e.currentTarget.scrollTop) /
+        cellSize,
+    )
+
+    switch (e.touches.length) {
+      case 1:
+        if (x !== x0 || y !== y0) {
+          setCurrentCoordinates([x, y])
+        }
+        break
+      case 2:
+        break
+      default:
+        break
+    }
   }
 
-  const handleDrawPreview = (drawing: Drawing) => {
-    clearPreview()
-    draw(
-      setPreviewCells,
-      drawing.filter(({ x, y }) => x < width && y < height),
-    )
+  const clearPreview = () => {
+    setPreviewCells([])
   }
+
+  const handleDrawMap = useCallback(
+    (drawing: Drawing) => {
+      draw(
+        setMapCells,
+        drawing.filter(({ x, y }) => x < width && y < height),
+      )
+    },
+    [width, height],
+  )
+
+  const handleDrawPreview = useCallback(
+    (drawing: Drawing) => {
+      clearPreview()
+      draw(
+        setPreviewCells,
+        drawing.filter(({ x, y }) => x < width && y < height),
+      )
+    },
+    [width, height],
+  )
+
+  useEffect(() => {
+    const viewDiv = viewDivRef.current
+    const preventDefault = (e: TouchEvent) => {
+      // if (e.touches.length === 1) {
+      e.preventDefault()
+      // }
+    }
+
+    viewDiv?.addEventListener('touchmove', preventDefault, { passive: false })
+
+    return () => viewDiv?.removeEventListener('touchmove', preventDefault)
+  }, [])
 
   return (
-    <div className="MapView" onMouseMove={handleMouseMove}>
+    <div
+      className="MapView"
+      ref={viewDivRef}
+      onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchMove}
+    >
       <MapLayer
         width={width}
         height={height}

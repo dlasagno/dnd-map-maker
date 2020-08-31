@@ -1,5 +1,5 @@
-import React from 'react'
-import Tool, { ToolComponent, Drawing } from '../common/tool'
+import React, { useState, useEffect } from 'react'
+import Tool, { ToolComponent } from '../common/tool'
 import icon from './pencil.svg'
 import '../common/tool.css'
 import { useTexture } from '../context/TextureContext'
@@ -13,30 +13,49 @@ const Pencil: ToolComponent = ({
   onDrawMap,
   onDrawPreview,
 }) => {
+  const [isDrawing, setIsDrawing] = useState(false)
+  const [isInside, setIsInside] = useState(false)
+
   const [selectedTexture] = useTexture()
   const [currentCoordinates] = useCoordinates()
 
-  const handleClick = () => {
-    const drawing: Drawing = []
+  const handleMouseDown = () => {
     const [x, y] = currentCoordinates
 
-    drawing.push({ x, y, cell: { texture: selectedTexture as Texture } })
-
-    onDrawMap(drawing)
+    setIsDrawing(true)
+    onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const [x, y] = currentCoordinates
+  const handleMouseUp = () => {
+    setIsDrawing(false)
+  }
 
-    onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
-
-    if ((e as React.MouseEvent).buttons === 1)
-      onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
+  const handleMouseEnter = () => {
+    setIsInside(true)
   }
 
   const handleMouseOut = () => {
+    setIsDrawing(false)
+    setIsInside(false)
     onDrawPreview([])
   }
+
+  useEffect(() => {
+    const [x, y] = currentCoordinates
+
+    if (isDrawing) {
+      onDrawMap([{ x, y, cell: { texture: selectedTexture as Texture } }])
+    } else if (isInside) {
+      onDrawPreview([{ x, y, cell: { texture: selectedTexture as Texture } }])
+    }
+  }, [
+    currentCoordinates,
+    selectedTexture,
+    isDrawing,
+    isInside,
+    onDrawMap,
+    onDrawPreview,
+  ])
 
   return (
     <button
@@ -46,11 +65,14 @@ const Pencil: ToolComponent = ({
         height: height * cellSize,
       }}
       type="button"
-      aria-label="bucket"
-      onClick={handleClick}
-      onMouseMove={handleMouseMove}
+      aria-label="pencil"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
       onBlur={handleMouseOut}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
     />
   )
 }
