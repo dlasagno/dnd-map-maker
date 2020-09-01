@@ -103,9 +103,9 @@ const MapView: React.FC<Props> = ({ width, height, cellSize }) => {
   useEffect(() => {
     const viewDiv = viewDivRef.current
     const preventDefault = (e: TouchEvent) => {
-      // if (e.touches.length === 1) {
-      e.preventDefault()
-      // }
+      if (e.touches.length === 1) {
+        e.preventDefault()
+      }
     }
 
     viewDiv?.addEventListener('touchmove', preventDefault, { passive: false })
