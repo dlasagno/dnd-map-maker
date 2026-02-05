@@ -1,0 +1,13 @@
+# Force LF line endings for all files
+* text=auto eol=lf
+
+# Force CRLF line endings for Windows files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+*.pssc text eol=crlf
+*.psscx text eol=crlf
+*.psscy text eol=crlf
+*.psscz text eol=crlf
