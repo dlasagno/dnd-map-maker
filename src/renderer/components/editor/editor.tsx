@@ -43,7 +43,21 @@ export function Editor() {
     setIsDragging(false);
   };
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    setZoom(zoom - event.deltaY / 1000);
+    const newZoom = Math.max(0.1, zoom - event.deltaY / 1000);
+    if (newZoom === zoom) return;
+
+    // Mouse position relative to the container center
+    const rect = event.currentTarget.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left - rect.width / 2;
+    const mouseY = event.clientY - rect.top - rect.height / 2;
+
+    // Adjust offset so the world point under the cursor stays fixed
+    const scale = newZoom / zoom;
+    setOffset({
+      x: mouseX - scale * (mouseX - offset.x),
+      y: mouseY - scale * (mouseY - offset.y),
+    });
+    setZoom(newZoom);
   };
 
   return (
