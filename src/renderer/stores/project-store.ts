@@ -28,5 +28,6 @@ export const useProjectStore = create<ProjectState>()((set) => ({
       ),
     })),
   setOffset: (offset: { x: number; y: number }) => set(() => ({ offset })),
-  setZoom: (zoom: number) => set(() => ({ zoom: Math.max(0.1, zoom) })),
+  setZoom: (zoom: number) =>
+    set(() => ({ zoom: Math.min(256, Math.max(0.02, zoom)) })),
 }));

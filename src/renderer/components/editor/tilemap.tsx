@@ -10,7 +10,7 @@ extend({
   Rectangle,
 });
 
-const BASE_TILE_SIZE = 30;
+export const BASE_TILE_SIZE = 30;
 const GRID_SIZE = 10;
 
 interface TilemapProps {

@@ -22,7 +22,8 @@
     "onlyBuiltDependencies": [
       "electron",
       "electron-winstaller",
-      "esbuild"
+      "esbuild",
+      "msw"
     ]
   },
   "dependencies": {
