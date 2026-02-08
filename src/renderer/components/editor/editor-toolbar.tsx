@@ -15,7 +15,6 @@ interface EditorToolbarProps {
 
 export function EditorToolbar({ className }: EditorToolbarProps) {
   const randomizeTilemap = useProjectStore((state) => state.randomizeTilemap);
-  const offset = useProjectStore((state) => state.offset);
   const setOffset = useProjectStore((state) => state.setOffset);
   const zoom = useProjectStore((state) => state.zoom);
   const setZoom = useProjectStore((state) => state.setZoom);
@@ -23,7 +22,7 @@ export function EditorToolbar({ className }: EditorToolbarProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-0.5 ring-foreground/10 bg-card text-card-foreground rounded-lg p-4 text-xs/relaxed ring-1",
+        "flex items-center gap-0.5 ring-foreground/10 bg-card text-card-foreground rounded-lg p-2 text-xs/relaxed ring-1",
         className,
       )}
     >
